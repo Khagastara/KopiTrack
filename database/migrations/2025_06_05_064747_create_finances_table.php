@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('keuangans', function (Blueprint $table) {
+        Schema::create('finances', function (Blueprint $table) {
             $table->id();
+            $table->date('finance_date');
+            $table->integer('total_quantity');
+            $table->decimal('income_balance', 15, 2)->default(0);
+            $table->decimal('expenditure_balance', 15, 2)->default(0);
+
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('keuangans');
+        Schema::dropIfExists('finances');
     }
 };
