@@ -3,28 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Transaction;
 use illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Admin extends Authenticatable
+class Merchant extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = 'admins';
+    protected $table = 'merchants';
     protected $primaryKey = 'id';
     protected $keyType = 'int';
     protected $fillable = [
-        'admin_name',
+        'merchant_name',
         'phone_number',
         'id_account',
     ];
 
-    public function Account() {
+    public function Account()
+    {
         return $this->belongsTo(Account::class, 'id_account', 'id');
     }
 
-    public function DistributionProduct()
+    public function Transaction()
     {
-        return $this->hasMany(DistributionProduct::class, 'id_admin', 'id');
+        return $this->hasMany(Transaction::class, 'id_merchant', 'id');
     }
 }

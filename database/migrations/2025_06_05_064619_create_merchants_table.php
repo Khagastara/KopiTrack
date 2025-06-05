@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaksis', function (Blueprint $table) {
+        Schema::create('merchants', function (Blueprint $table) {
             $table->id();
+            $table->string('merchant_name');
+            $table->string('phone_number')->unique();
+            $table->unsignedInteger('id_account');
             $table->timestamps();
+
+            $table->foreign('id_account')->on('accounts')->references('id');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksis');
+        Schema::dropIfExists('merchants');
     }
 };

@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produk_distribusis', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
+            $table->string('admin_name');
+            $table->string('phone_number')->unique();
+            $table->unsignedInteger('id_account');
             $table->timestamps();
+
+            $table->foreign('id_account')->on('accounts')->references('id');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produk_distribusis');
+        Schema::dropIfExists('admins');
     }
 };
