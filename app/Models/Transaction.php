@@ -15,6 +15,10 @@ class Transaction extends Model
         'id_finance'
     ];
 
+    protected $casts = [
+        'transaction' => 'date'
+    ];
+
     public function Merchant()
     {
         return $this->belongsTo(Merchant::class, 'id_merchant', 'id');
