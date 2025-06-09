@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_image');
             $table->integer('product_quantity');
-            $table->desimal('product_price', 10, 2);
+            $table->decimal('product_price', 10, 2);
             $table->string('product_description')->nullable();
             $table->unsignedBigInteger('id_admin');
             $table->timestamps();
