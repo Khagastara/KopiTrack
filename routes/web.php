@@ -19,7 +19,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     // Admin Route
     Route::get('dashboard', function () {
-        return view('admin.dashboard');})->name('admin.dashboard');
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
 
     Route::get('/merchants', [MerchantController::class, 'index'])->name('merchants.index');
     Route::get('/merchants/{id}', [MerchantController::class, 'show'])->name('merchants.show');
@@ -33,14 +34,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/transactions/{id}', [TransactionController::class, 'index'])->name('admin.transaction.index');
 
-    Route::get('finance/{id}', [FinanceController::class, 'index'])->name('admin.finance.show');
-    Route::match(['GET', 'POST'], 'finance/create', [FinanceController::class, 'create'])->name('admin.finance.create');
-    Route::match(['GET', 'PUT', 'PATCH'], 'finance/{id}/edit', [FinanceController::class, 'edit'])->name('admin.finance.edit');
-    Route::delete('finance/{id}', [FinanceController::class, 'destroy'])->name('admin.finance.destroy');
+    Route::get('/finance', [FinanceController::class, 'index'])->name('admin.finance.index');
+    Route::match(['get', 'post'], '/finance/create', [FinanceController::class, 'create'])->name('admin.finance.create');
+    Route::get('/finance/period', [FinanceController::class, 'getFinanceByPeriod'])->name('admin.finance.period');
+    Route::get('/finance/{id}', [FinanceController::class, 'show'])->name('admin.finance.show');
+    Route::match(['get', 'put', 'patch'], '/finance/{id}/edit', [FinanceController::class, 'edit'])->name('admin.finance.edit');
+    Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('admin.finance.destroy');
 
     // Merchant Route
     Route::get('/merchant/dashboard', function () {
-        return view('merchant.dashboard');})->name('merchant.dashboard');
+        return view('merchant.dashboard');
+    })->name('merchant.dashboard');
 
     Route::get('/merchant/product/{id}', [ProductController::class, 'merchantIndex'])->name('merchant.product.index');
 
