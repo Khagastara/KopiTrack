@@ -1,14 +1,11 @@
 <aside class="bg-white w-64 h-full shadow-md">
-    <div class="p-6 flex items-center">
-        <div class="flex-shrink-0">
-            <img src="{{ asset('images/logo.png') }}" alt="KopiTrack Logo" class="h-8 w-auto">
-        </div>
-        <div class="ml-3">
-            <h2 class="font-bold text-xl text-gray-800">KopiTrack</h2>
+    <div class="mt-2 flex items-center">
+        <div class="items-center justify-center flex w-full">
+            <img src="{{ asset('images/Logo KopiTrack 2.0.png') }}" alt="KopiTrack Logo" class="h-24 w-auto">
         </div>
     </div>
 
-    <nav class="mt-5 px-2">
+    <nav class="mt-3 px-2">
         <div class="space-y-1">
             <!-- Dashboard -->
             <a href="{{ Auth::check() && Auth::user()->admin ? route('admin.dashboard') : route('merchant.dashboard') }}"
