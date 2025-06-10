@@ -9,7 +9,6 @@
         </div>
     @endif
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <!-- Statistik Card 1 -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-blue-100 text-blue-500">
@@ -23,7 +22,6 @@
             </div>
         </div>
 
-        <!-- Statistik Card 2 -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100 text-green-500">
@@ -37,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Statistik Card 3 -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-500">
@@ -51,7 +48,6 @@
             </div>
         </div>
 
-        <!-- Statistik Card 4 -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-red-100 text-red-500">
@@ -67,7 +63,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Pesanan Terbaru -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="font-semibold text-lg">Pesanan Terbaru</h2>
@@ -209,7 +204,6 @@
         </div>
     </div>
 
-    <!-- Grafik Penjualan -->
     <div class="bg-white shadow rounded-lg p-4 mt-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="font-semibold text-lg">Grafik Penjualan</h2>

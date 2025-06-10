@@ -3,7 +3,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Manajemen Keuangan</h2>
 
-            <!-- Year Navigation -->
             <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-md">
                 <a href="{{ route('admin.finance.index', ['current_date' => $navigationDate, 'direction' => 'prev']) }}"
                     class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
@@ -16,7 +15,6 @@
                 </a>
             </div>
 
-            <!-- Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white p-4 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Pendapatan</h3>
@@ -36,13 +34,11 @@
                 </div>
             </div>
 
-            <!-- Chart -->
             <div class="bg-white p-4 rounded-lg shadow-md mb-6">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">Grafik Keuangan</h3>
                 <canvas id="financeChart" height="300"></canvas>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex justify-between mb-4">
                 <a href="{{ route('admin.finance.create') }}"
                     class="px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700">
@@ -224,7 +220,7 @@
                             if (data.success) {
                                 alert(
                                     `Hasil filter: Total Pendapatan: Rp${data.summary.total_income.toLocaleString()}, Total Pengeluaran: Rp${data.summary.total_expenditure.toLocaleString()}`
-                                    );
+                                );
                                 // You could update the UI with the filtered data here
                                 filterModal.classList.add('hidden');
                             }

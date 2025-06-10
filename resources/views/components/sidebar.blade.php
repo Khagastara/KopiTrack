@@ -37,16 +37,16 @@
                 class="{{ request()->routeIs('*.transaction.index') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
                 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                 <i class="fas fa-exchange-alt mr-3 text-gray-500"></i>
-                Transaksi
+                Riwayat Transaksi
             </a>
 
-            <!-- Sistem Kasir (hanya untuk merchant) -->
+            <!-- Sistem Kasir -->
             @if (Auth::check() && !Auth::user()->admin)
                 <a href="{{ route('merchant.transaction.create.form') }}"
                     class="{{ request()->routeIs('merchant.transaction.create.form') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
                     group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                     <i class="fas fa-cash-register mr-3 text-gray-500"></i>
-                    Sistem Kasir
+                    Transaksi
                 </a>
             @endif
 

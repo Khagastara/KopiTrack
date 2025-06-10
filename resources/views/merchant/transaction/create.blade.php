@@ -1,15 +1,14 @@
-<x-app-layout title="Sistem Kasir">
+<x-app-layout title="Transaksi">
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Sistem Kasir</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Transaksi</h2>
                 <a href="{{ route('merchant.transaction.index', 1) }}"
                     class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                     <i class="fas fa-arrow-left mr-1"></i> Kembali
                 </a>
             </div>
 
-            <!-- Alert Messages -->
             @if (session('success'))
                 <div class="mb-4 px-4 py-3 bg-green-100 border-l-4 border-green-500 text-green-700">
                     <p>{{ session('success') }}</p>
@@ -23,11 +22,9 @@
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                <!-- Product List Column (3/5 width) -->
                 <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold text-gray-700 mb-4">Daftar Produk</h3>
 
-                    <!-- Product Search -->
                     <div class="mb-4">
                         <div class="relative">
                             <input type="text" id="productSearch" placeholder="Cari produk..."
@@ -38,7 +35,6 @@
                         </div>
                     </div>
 
-                    <!-- Products Table -->
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -90,7 +86,6 @@
                     </div>
                 </div>
 
-                <!-- Shopping Cart Column (2/5 width) -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-700">Keranjang Belanja</h3>
@@ -103,7 +98,6 @@
                         </form>
                     </div>
 
-                    <!-- Cart Items -->
                     <div class="mb-4 max-h-80 overflow-y-auto">
                         @if (count($cart) > 0)
                             <ul class="divide-y divide-gray-200">
@@ -166,14 +160,12 @@
                         @endif
                     </div>
 
-                    <!-- Cart Total -->
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <div class="flex justify-between text-lg font-semibold">
                             <span>Total:</span>
                             <span class="text-green-600">Rp {{ number_format($cartTotal, 0, ',', '.') }}</span>
                         </div>
 
-                        <!-- Checkout Button -->
                         <form action="{{ route('merchant.transaction.checkout') }}" method="POST" class="mt-6">
                             @csrf
                             <button type="submit"
@@ -188,7 +180,6 @@
         </div>
     </div>
 
-    <!-- Add to Cart Modal -->
     <div id="addToCartModal"
         class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-xl w-96">
@@ -283,7 +274,7 @@
                             const qty = parseInt(this.value) || 1;
                             const subtotal = price * qty;
                             modalSubtotal.textContent = 'Rp ' + subtotal.toLocaleString(
-                            'id-ID');
+                                'id-ID');
                         });
                     });
                 });

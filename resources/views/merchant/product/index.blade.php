@@ -4,14 +4,12 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Produk Kami</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Product List Panel -->
                 <div class="md:col-span-2 bg-white rounded-lg shadow-md">
                     <div class="p-4 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">Katalog Produk</h3>
                     </div>
 
                     <div class="p-4">
-                        <!-- Products Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @forelse($productIndex as $product)
                                 <div
@@ -39,7 +37,6 @@
                     </div>
                 </div>
 
-                <!-- Product Detail Panel -->
                 <div class="md:col-span-1 bg-white rounded-lg shadow-md">
                     <div class="p-4 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">Detail Produk</h3>

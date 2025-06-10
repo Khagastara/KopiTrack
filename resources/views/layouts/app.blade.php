@@ -9,10 +9,7 @@
 
     <title>KopiTrack - {{ $title ?? 'Dashboard' }}</title>
 
-    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Configure Tailwind through the script -->
     <script>
         tailwind.config = {
             theme: {
@@ -35,24 +32,18 @@
             }
         }
     </script>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     @stack('styles')
 </head>
 
 <body class="bg-gray-100">
     <div class="flex h-screen bg-gray-100">
-        <!-- Sidebar Component -->
         <x-sidebar />
 
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header Component -->
             @include('components.header')
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-                <!-- Page Content -->
                 {{ $slot }}
             </main>
         </div>
