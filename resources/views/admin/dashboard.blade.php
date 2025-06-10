@@ -1,9 +1,13 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Admin Dashboard')
-@section('header', 'Admin Dashboard')
 
 @section('content')
+    @if (session('error'))
+        <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <!-- Statistik Card 1 -->
         <div class="bg-white shadow rounded-lg p-4">
