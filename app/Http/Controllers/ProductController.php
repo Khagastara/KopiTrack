@@ -123,19 +123,6 @@ class ProductController extends Controller
         return redirect()->route('admin.product.index', $product->id)->with('success', 'Produk berhasil diperbarui');
     }
 
-    public function destroy($id)
-    {
-        $product = DistributionProduct::findOrFail($id);
-
-        if ($product->product_image && file_exists(public_path($product->product_image))) {
-            unlink(public_path($product->product_image));
-        }
-
-        $product->delete();
-
-        return redirect()->route('admin.product.index')->with('success', 'Produk berhasil dihapus');
-    }
-
     public function merchantIndex($id = null)
     {
         $productIndex = DistributionProduct::all();
