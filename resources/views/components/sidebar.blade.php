@@ -32,6 +32,14 @@
                 Pesanan
             </a>
 
+            <!-- Keuangan -->
+            <a href="{{ route('admin.finance.index') }}"
+                class="{{ request()->routeIs('admin.finance.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+                group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                <i class="fas fa-money-bill-wave mr-3 text-gray-500"></i>
+                Keuangan
+            </a>
+
             <!-- Laporan -->
             <a href="#"
                 class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
@@ -50,11 +58,14 @@
 
     <div class="absolute bottom-0 w-64 mb-6">
         <div class="px-6">
-            <a href="{{ route('logout') }}"
-                class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brown-600 hover:bg-brown-700">
-                <i class="fas fa-sign-out-alt mr-2"></i>
-                Keluar
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brown-600 hover:bg-brown-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </form>
         </div>
     </div>
 </aside>
