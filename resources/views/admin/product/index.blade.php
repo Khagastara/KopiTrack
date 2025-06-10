@@ -4,7 +4,7 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Manajemen Produk</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Product List Panel -->
+
                 <div class="md:col-span-2 bg-white rounded-lg shadow-md">
                     <div class="p-4 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">Daftar Produk</h3>
@@ -18,7 +18,6 @@
                             </a>
                         </div>
 
-                        <!-- Products Table -->
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
@@ -83,7 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Product Detail Panel -->
                 <div class="md:col-span-1 bg-white rounded-lg shadow-md">
                     <div class="p-4 border-b">
                         <h3 class="text-lg font-semibold text-gray-800">Detail Produk</h3>

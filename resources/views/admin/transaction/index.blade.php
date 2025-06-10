@@ -8,7 +8,6 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Manajemen Transaksi</h2>
 
-                <!-- Transaction Detail Card -->
                 <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                     <h3 class="text-lg font-semibold text-gray-700 mb-4">Detail Transaksi</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -40,7 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Search & Filter -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                     <div class="w-full md:w-1/3">
                         <div class="relative">
@@ -61,7 +59,6 @@
                     </div>
                 </div>
 
-                <!-- Transactions Table -->
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -124,7 +121,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
                 <div class="mt-4">
                     {{ $transactions->links() }}
                 </div>

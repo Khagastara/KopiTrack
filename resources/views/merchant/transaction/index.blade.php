@@ -1,4 +1,4 @@
-<x-app-layout title="Manajemen Transaksi">
+<x-app-layout title="Riwayat Transaksi">
     @if (!$hasTransactions)
         <div class="alert alert-info">
             <h4 class="text-center">Belum ada data transaksi</h4>
@@ -6,9 +6,8 @@
     @else
         <div class="py-6">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Transaksi Saya</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Riwayat Transaksi</h2>
 
-                <!-- Detail Transaksi Card -->
                 <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                     <h3 class="text-lg font-semibold text-gray-700 mb-4">Detail Transaksi</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -145,7 +144,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
                 <div class="mt-4">
                     {{ $transactions->links() }}
                 </div>
