@@ -21,12 +21,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-
-    Route::get('/merchants', [MerchantController::class, 'index'])->name('merchants.index');
-    Route::get('/merchants/{id}', [MerchantController::class, 'show'])->name('merchants.show');
-    Route::post('/merchants', [MerchantController::class, 'store'])->name('merchants.store');
-    Route::post('/merchants/{id}/update', [MerchantController::class, 'update'])->name('merchants.update');
-    Route::post('/merchants/{id}/delete', [MerchantController::class, 'destroy'])->name('merchants.delete');
+    Route::resource('merchants', MerchantController::class);
 
     Route::get('product/{id}', [ProductController::class, 'index'])->name('admin.product.index');
     Route::post('product/{id}/create', [ProductController::class, 'create'])->name('admin.product.create');
@@ -43,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Merchant Route
     Route::get('/merchant/dashboard', function () {
-        return view('merchant.dashboard');
+        return view('merchants.dashboard');
     })->name('merchant.dashboard');
 
     Route::get('/merchant/product/{id}', [ProductController::class, 'merchantIndex'])->name('merchant.product.index');

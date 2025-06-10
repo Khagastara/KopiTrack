@@ -16,18 +16,31 @@ class MerchantController extends Controller
         try {
             $merchants = Merchant::with('Account')->get();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data merchant berhasil diambil',
-                'data' => $merchants
-            ], 200);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data merchant berhasil diambil',
+                    'data' => $merchants
+                ], 200);
+            }
+
+            return view('admin.merchants.index', compact('merchants'));
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal mengambil data merchant',
-                'error' => $e->getMessage()
-            ], 500);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal mengambil data merchant',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Gagal mengambil data merchant: ' . $e->getMessage());
         }
+    }
+
+    public function create()
+    {
+        return view('admin.merchants.create');
     }
 
     public function show($id)
@@ -36,23 +49,50 @@ class MerchantController extends Controller
             $merchant = Merchant::with('Account')->find($id);
 
             if (!$merchant) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Merchant tidak ditemukan'
-                ], 404);
+                if (request()->expectsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Merchant tidak ditemukan'
+                    ], 404);
+                }
+
+                return redirect()->route('merchants.index')->with('error', 'Merchant tidak ditemukan');
             }
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Detail merchant berhasil diambil',
-                'data' => $merchant
-            ], 200);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Detail merchant berhasil diambil',
+                    'data' => $merchant
+                ], 200);
+            }
+
+            return view('admin.merchants.show', compact('merchant'));
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal mengambil detail merchant',
-                'error' => $e->getMessage()
-            ], 500);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal mengambil detail merchant',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Gagal mengambil detail merchant: ' . $e->getMessage());
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $merchant = Merchant::with('Account')->find($id);
+
+            if (!$merchant) {
+                return redirect()->route('merchants.index')->with('error', 'Merchant tidak ditemukan');
+            }
+
+            return view('admin.merchants.edit', compact('merchant'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengambil data merchant: ' . $e->getMessage());
         }
     }
 
@@ -61,17 +101,21 @@ class MerchantController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255|unique:accounts,username',
             'email' => 'required|string|email|max:255|unique:accounts,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
             'merchant_name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20|unique:merchants,phone_number'
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validasi gagal',
-                'errors' => $validator->errors()
-            ], 422);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            return back()->withErrors($validator)->withInput();
         }
 
         DB::beginTransaction();
@@ -93,20 +137,27 @@ class MerchantController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Akun merchant berhasil dibuat',
-                'data' => $merchant
-            ], 201);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Akun merchant berhasil dibuat',
+                    'data' => $merchant
+                ], 201);
+            }
 
+            return redirect()->route('merchants.index')->with('success', 'Akun merchant berhasil dibuat');
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal membuat akun merchant',
-                'error' => $e->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal membuat akun merchant',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Gagal membuat akun merchant: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -116,38 +167,51 @@ class MerchantController extends Controller
             $merchant = Merchant::with('Account')->find($id);
 
             if (!$merchant) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Merchant tidak ditemukan'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Merchant tidak ditemukan'
+                    ], 404);
+                }
+
+                return redirect()->route('merchants.index')->with('error', 'Merchant tidak ditemukan');
             }
 
-            $validator = Validator::make($request->all(), [
+            $rules = [
                 'username' => 'sometimes|string|max:255|unique:accounts,username,' . $merchant->Account->id,
                 'email' => 'sometimes|string|email|max:255|unique:accounts,email,' . $merchant->Account->id,
-                'password' => 'sometimes|string|min:6',
                 'merchant_name' => 'sometimes|string|max:255',
                 'phone_number' => 'sometimes|string|max:20|unique:merchants,phone_number,' . $merchant->id
-            ]);
+            ];
+
+            if ($request->filled('password')) {
+                $rules['password'] = 'string|min:6|confirmed';
+            }
+
+            $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Validasi gagal',
-                    'errors' => $validator->errors()
-                ], 422);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+
+                return back()->withErrors($validator)->withInput();
             }
 
             DB::beginTransaction();
 
             $accountData = [];
-            if ($request->has('username')) {
+            if ($request->filled('username')) {
                 $accountData['username'] = $request->username;
             }
-            if ($request->has('email')) {
+            if ($request->filled('email')) {
                 $accountData['email'] = $request->email;
             }
-            if ($request->has('password')) {
+            if ($request->filled('password')) {
                 $accountData['password'] = Hash::make($request->password);
             }
 
@@ -156,10 +220,10 @@ class MerchantController extends Controller
             }
 
             $merchantData = [];
-            if ($request->has('merchant_name')) {
+            if ($request->filled('merchant_name')) {
                 $merchantData['merchant_name'] = $request->merchant_name;
             }
-            if ($request->has('phone_number')) {
+            if ($request->filled('phone_number')) {
                 $merchantData['phone_number'] = $request->phone_number;
             }
 
@@ -172,20 +236,27 @@ class MerchantController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data merchant berhasil diperbarui',
-                'data' => $merchant
-            ], 200);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data merchant berhasil diperbarui',
+                    'data' => $merchant
+                ], 200);
+            }
 
+            return redirect()->route('merchants.index')->with('success', 'Data merchant berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal memperbarui data merchant',
-                'error' => $e->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal memperbarui data merchant',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Gagal memperbarui data merchant: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -195,10 +266,14 @@ class MerchantController extends Controller
             $merchant = Merchant::with('Account')->find($id);
 
             if (!$merchant) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Merchant tidak ditemukan'
-                ], 404);
+                if (request()->expectsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Merchant tidak ditemukan'
+                    ], 404);
+                }
+
+                return redirect()->route('merchants.index')->with('error', 'Merchant tidak ditemukan');
             }
 
             DB::beginTransaction();
@@ -209,19 +284,26 @@ class MerchantController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Merchant berhasil dihapus'
-            ], 200);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Merchant berhasil dihapus'
+                ], 200);
+            }
 
+            return redirect()->route('merchants.index')->with('success', 'Merchant berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal menghapus merchant',
-                'error' => $e->getMessage()
-            ], 500);
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal menghapus merchant',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Gagal menghapus merchant: ' . $e->getMessage());
         }
     }
 }
