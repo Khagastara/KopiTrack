@@ -21,13 +21,35 @@ class Account extends Authenticatable
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
-    public function Admin() {
-        return $this->hasOne(Admin::class, 'account_id', 'id');
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    public function admin() {
+        return $this->hasOne(Admin::class, 'id_account', 'id');
     }
 
-    public function Merchant() {
-        return $this->hasMany(Merchant::class, 'account_id', 'id');
+    public function merchant() {
+        return $this->hasOne(Merchant::class, 'id_account', 'id');
+    }
+
+    public function isAdmin() {
+        return $this->admin()->exists();
+    }
+
+    public function isMerchant() {
+        return $this->merchant()->exists();
+    }
+
+    public function getRole() {
+        if ($this->isAdmin()) {
+            return 'admin';
+        } elseif ($this->isMerchant()) {
+            return 'merchant';
+        }
+        return null;
     }
 }

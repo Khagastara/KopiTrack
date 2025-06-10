@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transaction;
-use illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Merchant extends Authenticatable
@@ -20,13 +20,28 @@ class Merchant extends Authenticatable
         'id_account',
     ];
 
-    public function Account()
+    public function account()
     {
         return $this->belongsTo(Account::class, 'id_account', 'id');
     }
 
-    public function Transaction()
+    public function transactions()
     {
         return $this->hasMany(Transaction::class, 'id_merchant', 'id');
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->account->password ?? null;
     }
 }
