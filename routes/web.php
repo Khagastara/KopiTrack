@@ -53,5 +53,18 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/merchant/transactions/{id}', [TransactionController::class, 'merchantIndex'])->name('merchant.transaction.index');
         Route::match(['GET', 'POST'], '/merchant/transactions/create/{id}/{quantity}', [TransactionController::class, 'create'])->name('merchant.transactions.create');
+
+        Route::get('/merchant/transaction/create', [TransactionController::class, 'createForm'])
+            ->name('merchant.transaction.create.form');
+        Route::post('/merchant/transaction/cart/add', [TransactionController::class, 'addToCart'])
+            ->name('merchant.transaction.cart.add');
+        Route::delete('/merchant/transaction/cart/{product_id}', [TransactionController::class, 'removeFromCart'])
+            ->name('merchant.transaction.cart.remove');
+        Route::put('/merchant/transaction/cart/update', [TransactionController::class, 'updateCart'])
+            ->name('merchant.transaction.cart.update');
+        Route::post('/merchant/transaction/checkout', [TransactionController::class, 'checkout'])
+            ->name('merchant.transaction.checkout');
+        Route::delete('/merchant/transaction/cart', [TransactionController::class, 'clearCart'])
+            ->name('merchant.transaction.cart.clear');
     });
 });

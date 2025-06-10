@@ -82,6 +82,44 @@ class FinanceController extends Controller
         ));
     }
 
+    public function show($id)
+    {
+        $finance = Finance::findOrFail($id);
+
+        $transactions = Transaction::where('id_finance', $finance->id)
+            ->with(['merchant', 'transactionDetail.distributionProduct'])
+            ->get();
+        if ($transactions->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada transaksi untuk rekapitulasi ini.');
+        } else {
+            $transactionData = $transactions->map(
+                function ($transaction) {
+                    $details = $transaction->transactionDetail;
+                    $totalQuantity = 0;
+                    $totalCost = 0;
+
+                    foreach ($details as $detail) {
+                        $totalQuantity += $detail->quantity;
+                        $totalCost += $detail->sub_price;
+                    }
+
+                    return [
+                        'id' => $transaction->id,
+                        'transaction_date' => $transaction->transaction_date instanceof \DateTime
+                            ? $transaction->transaction_date->format('d-m-Y')
+                            : date('d-m-Y', strtotime($transaction->transaction_date)),
+                        'merchant_name' => $transaction->merchant->name,
+                        'product_count' => $details->count(),
+                        'quantity' => $totalQuantity,
+                        'transaction_cost' => $totalCost,
+                    ];
+                }
+            );
+        }
+
+        return view('admin.finance.show', compact('finance', 'transactionData'));
+    }
+
     public function create(Request $request)
     {
         if ($request->isMethod('post')) {

@@ -32,12 +32,23 @@
                 Produk
             </a>
 
-            <!-- Pesanan -->
-            <a href="#"
-                class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
-                <i class="fas fa-shopping-cart mr-3 text-gray-500"></i>
-                Pesanan
+            <!-- Transaksi -->
+            <a href="{{ Auth::check() && Auth::user()->admin ? route('admin.transaction.index', 1) : route('merchant.transaction.index', 1) }}"
+                class="{{ request()->routeIs('*.transaction.index') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+                group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                <i class="fas fa-exchange-alt mr-3 text-gray-500"></i>
+                Transaksi
             </a>
+
+            <!-- Sistem Kasir (hanya untuk merchant) -->
+            @if (Auth::check() && !Auth::user()->admin)
+                <a href="{{ route('merchant.transaction.create.form') }}"
+                    class="{{ request()->routeIs('merchant.transaction.create.form') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+                    group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-cash-register mr-3 text-gray-500"></i>
+                    Sistem Kasir
+                </a>
+            @endif
 
             <!-- Keuangan -->
             @if (Auth::check() && Auth::user()->admin)
@@ -48,28 +59,12 @@
                     Keuangan
                 </a>
             @endif
-
-            <!-- Laporan -->
-            <a href="#"
-                class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
-                <i class="fas fa-chart-bar mr-3 text-gray-500"></i>
-                Laporan
-            </a>
-
-            <!-- Pengaturan -->
-            <a href="#"
-                class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
-                <i class="fas fa-cog mr-3 text-gray-500"></i>
-                Pengaturan
-            </a>
         </div>
     </nav>
 
     <div class="absolute bottom-0 w-64 mb-6">
         <div class="px-6">
-
             <form action="{{ route('logout') }}" method="POST">
-
                 @csrf
                 <button type="submit"
                     class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brown-600 hover:bg-brown-700">
