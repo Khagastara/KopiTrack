@@ -44,7 +44,7 @@
                                     @forelse($productIndex as $product)
                                         <tr class="{{ $productShow->id == $product->id ? 'bg-brown-50' : '' }}">
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <img src="{{ asset($product->product_image) }}"
+                                                <img src="{{ asset('storage/' . $product->product_image) }}"
                                                     alt="{{ $product->product_name }}"
                                                     class="h-12 w-12 object-cover rounded">
                                             </td>
@@ -92,7 +92,7 @@
                     <div class="p-4">
                         @if (isset($productShow))
                             <div class="flex flex-col items-center">
-                                <img src="{{ asset($productShow->product_image) }}"
+                                <img src="{{ asset('storage/' . $productShow->product_image) }}"
                                     alt="{{ $productShow->product_name }}"
                                     class="h-48 w-48 object-cover rounded-lg mb-4">
 
