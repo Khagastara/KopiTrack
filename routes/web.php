@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
     // Merchant Routes - merchant middleware
     Route::middleware([MerchantMiddleware::class])->group(function () {
         Route::get('/merchant/dashboard', function () {
-            return view('merchants.dashboard');
+            return view('merchant.dashboard');
         })->name('merchant.dashboard');
 
         Route::get('/merchant/product/{id}', [ProductController::class, 'merchantIndex'])->name('merchant.product.index');
