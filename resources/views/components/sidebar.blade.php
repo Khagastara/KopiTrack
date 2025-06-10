@@ -28,8 +28,9 @@
             @endif
 
             <!-- Produk -->
-            <a href="#"
-                class="text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+            <a href="{{ Auth::check() && Auth::user()->admin ? route('admin.product.index', 1) : route('merchant.product.index', 1) }}"
+                class="{{ request()->routeIs('*.product.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+                group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                 <i class="fas fa-mug-hot mr-3 text-gray-500"></i>
                 Produk
             </a>
