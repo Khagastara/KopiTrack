@@ -11,12 +11,21 @@
     <nav class="mt-5 px-2">
         <div class="space-y-1">
             <!-- Dashboard -->
-            <a href="{{ Auth::guard('admin')->check() ? route('admin.dashboard') : route('merchant.dashboard') }}"
+            <a href="{{ Auth::check() && Auth::user()->admin ? route('admin.dashboard') : route('merchant.dashboard') }}"
                 class="{{ request()->routeIs('*.dashboard') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
                group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                 <i class="fas fa-tachometer-alt mr-3 text-gray-500"></i>
                 Dashboard
             </a>
+
+            @if (Auth::check() && Auth::user()->admin)
+                <a href="{{ route('merchants.index') }}"
+                    class="{{ request()->routeIs('merchants.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+               group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-store mr-3 text-gray-500"></i>
+                    Kelola Merchant
+                </a>
+            @endif
 
             <!-- Produk -->
             <a href="#"
@@ -33,12 +42,14 @@
             </a>
 
             <!-- Keuangan -->
-            <a href="{{ route('admin.finance.index') }}"
-                class="{{ request()->routeIs('admin.finance.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+            @if (Auth::check() && Auth::user()->admin)
+                <a href="{{ route('admin.finance.index') }}"
+                    class="{{ request()->routeIs('admin.finance.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
                 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
-                <i class="fas fa-money-bill-wave mr-3 text-gray-500"></i>
-                Keuangan
-            </a>
+                    <i class="fas fa-money-bill-wave mr-3 text-gray-500"></i>
+                    Keuangan
+                </a>
+            @endif
 
             <!-- Laporan -->
             <a href="#"
