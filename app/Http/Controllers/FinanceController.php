@@ -14,7 +14,7 @@ class FinanceController extends Controller
     {
         if ($id) {
             $finance = Finance::findOrFail($id);
-            return view('owner.finance.show', compact('finance'));
+            return view('admin.finance.show', compact('finance'));
         }
 
         $currentDate = $request->get('current_date', now()->format('Y-m-d'));
@@ -68,7 +68,7 @@ class FinanceController extends Controller
             ->orderBy('transaction_date', 'desc')
             ->get();
 
-        return view('owner.finance.index', compact(
+        return view('admin.finance.index', compact(
             'finances',
             'financeLabels',
             'financeIncome',
@@ -93,7 +93,7 @@ class FinanceController extends Controller
             ->orderBy('transaction_date', 'desc')
             ->get();
 
-        return view('owner.finance.create', compact('tanggalRekapitulasi'));
+        return view('admin.finance.create', compact('tanggalRekapitulasi'));
     }
 
     private function handleStore(Request $request)
@@ -145,7 +145,7 @@ class FinanceController extends Controller
             ]);
         }
 
-        return redirect()->route('owner.finance.index')
+        return redirect()->route('admin.finance.index')
             ->with('success', 'Data keuangan berhasil ditambahkan');
     }
 
@@ -157,7 +157,7 @@ class FinanceController extends Controller
             return $this->handleUpdate($request, $id);
         }
 
-        return view('owner.finance.edit', compact('finance'));
+        return view('admin.finance.edit', compact('finance'));
     }
 
     private function handleUpdate(Request $request, $id)
@@ -196,7 +196,7 @@ class FinanceController extends Controller
             'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
         ]);
 
-        return redirect()->route('owner.finance.index')
+        return redirect()->route('admin.finance.index')
             ->with('success', 'Data keuangan berhasil diperbarui');
     }
 
@@ -205,7 +205,7 @@ class FinanceController extends Controller
         $finance = Finance::findOrFail($id);
         $finance->delete();
 
-        return redirect()->route('owner.finance.index')
+        return redirect()->route('admin.finance.index')
             ->with('success', 'Data keuangan berhasil dihapus');
     }
 
@@ -228,7 +228,7 @@ class FinanceController extends Controller
                 return $transaction->transactionDetails->sum('quantity');
             });
     }
-    
+
     public function getFinanceByPeriod(Request $request)
     {
         $startDate = $request->get('start_date');

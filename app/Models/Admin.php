@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
@@ -19,12 +19,27 @@ class Admin extends Authenticatable
         'id_account',
     ];
 
-    public function Account() {
+    public function account() {
         return $this->belongsTo(Account::class, 'id_account', 'id');
     }
 
-    public function DistributionProduct()
+    public function distributionProducts()
     {
         return $this->hasMany(DistributionProduct::class, 'id_admin', 'id');
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->account->password ?? null;
     }
 }

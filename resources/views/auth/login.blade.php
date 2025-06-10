@@ -11,7 +11,7 @@
                     <p class="text-gray-600 mt-2">Silakan masuk ke akun Anda</p>
                 </div>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
 
                     <div class="mb-6">
@@ -44,7 +44,7 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full bg-brown-600 hover:bg-brown-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
+                        class="w-full bg-brown-600 hover:bg-brown-700 text-black font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
                         Masuk
                     </button>
                 </form>
