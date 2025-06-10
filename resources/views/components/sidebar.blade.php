@@ -58,7 +58,9 @@
 
     <div class="absolute bottom-0 w-64 mb-6">
         <div class="px-6">
-            <form method="POST" action="{{ route('logout') }}">
+
+            <form action="{{ route('logout') }}" method="POST">
+
                 @csrf
                 <button type="submit"
                     class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brown-600 hover:bg-brown-700">
