@@ -8,10 +8,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\FinanceController;
 
-Route::get('/', function () {return view('auth.login');})->name('login');
+Route::get('/', function () {
+    return view('auth.login');
+})->name('login');
 
 Route::get('/login', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     // Admin Route

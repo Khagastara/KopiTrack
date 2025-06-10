@@ -25,22 +25,31 @@ class LoginController extends Controller
                 'username' => $request->username,
                 'password' => $request->password
             ]
-            ))
-            {
-                $account = Auth::guard('web')->user();
-                if ($account->admin) {
-                    Auth::guard('admin')->login($account->owner);
-                    return redirect()->route('admin.dashboard');
-                }
-                else {
-                    Auth::guard('merchant')->login($account->merchant);
-                    return redirect()->route('merchant.dashboard');
-                }
+        )) {
+            $account = Auth::guard('web')->user();
+            if ($account->admin) {
+                Auth::guard('admin')->login($account->owner);
+                return redirect()->route('admin.dashboard');
+            } else {
+                Auth::guard('merchant')->login($account->merchant);
+                return redirect()->route('merchant.dashboard');
             }
+        }
 
-            return back()->withErrors([
-                'username' => 'Username salah',
-                'password' => 'Password salah'
-            ])->withInput();
+        return back()->withErrors([
+            'username' => 'Username salah',
+            'password' => 'Password salah'
+        ])->withInput();
+    }
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        Auth::guard('admin')->logout();
+        Auth::guard('merchant')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
