@@ -47,16 +47,15 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Semua Data Harus Diisi!')->withInput();
         }
 
+        $productPath = null;
+
         if ($request->hasFile('product_image')) {
-            $productImage = $request->file('product_image');
-            $productName = time() . '.' . $productImage->getClientOriginalExtension();
-            $productImage->move(public_path('images/product'), $productName);
-            $productPath = 'images/product/' . $productName;
+            $productPath = $request->file('product_image')->store('product-images', 'public');
         }
 
         DistributionProduct::create([
             'product_name' => $request->product_name,
-            'product_image' => $productPath ?? '',
+            'product_image' => $productPath,
             'product_quantity' => $request->product_quantity,
             'product_price' => $request->product_price,
             'product_description' => $request->product_description
@@ -94,31 +93,21 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Data Tidak Boleh Ada yang Kosong')->withInput();
         }
 
+        $data = [
+            'product_name' => $request->product_name,
+            'product_quantity' => $request->product_quantity,
+            'product_price' => $request->product_price,
+            'product_description' => $request->product_description
+        ];
+
         if ($request->hasFile('product_image')) {
-            if ($product->product_image && file_exists(public_path($product->product_image))) {
-                unlink(public_path($product->product_image));
+            if ($product->product_image) {
+                Storage::disk('public')->delete($product->product_image);
             }
-
-            $productImage = $request->file('product_image');
-            $productName = time() . '.' . $productImage->getClientOriginalExtension();
-            $productImage->move(public_path('images/product'), $productName);
-            $productPath = 'images/product/' . $productName;
-
-            $product->update([
-                'product_name' => $request->product_name,
-                'product_image' => $productPath,
-                'product_quantity' => $request->product_quantity,
-                'product_price' => $request->product_price,
-                'product_description' => $request->product_description
-            ]);
-        } else {
-            $product->update([
-                'product_name' => $request->product_name,
-                'product_quantity' => $request->product_quantity,
-                'product_price' => $request->product_price,
-                'product_description' => $request->product_description
-            ]);
+            $data['product_image'] = $request->file('product_image')->store('product-images', 'public');
         }
+
+        $product->update($data);
 
         return redirect()->route('admin.product.index', $product->id)->with('success', 'Produk berhasil diperbarui');
     }

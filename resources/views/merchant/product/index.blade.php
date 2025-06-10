@@ -14,14 +14,18 @@
                         <!-- Products Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @forelse($productIndex as $product)
-                                <div class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow {{ $productShow->id == $product->id ? 'ring-2 ring-brown-500' : '' }}">
+                                <div
+                                    class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow {{ $productShow->id == $product->id ? 'ring-2 ring-brown-500' : '' }}">
                                     <a href="{{ route('merchant.product.index', $product->id) }}">
-                                        <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}" class="h-40 w-full object-cover">
+                                        <img src="{{ asset('storage/' . $product->product_image) }}"
+                                            alt="{{ $product->product_name }}" class="h-40 w-full object-cover">
                                         <div class="p-3">
                                             <h4 class="font-semibold text-gray-800">{{ $product->product_name }}</h4>
                                             <div class="flex justify-between items-center mt-2">
-                                                <span class="text-sm text-gray-600">Stok: {{ $product->product_quantity }}</span>
-                                                <span class="text-brown-600 font-medium">Rp {{ number_format($product->product_price, 0, ',', '.') }}</span>
+                                                <span class="text-sm text-gray-600">Stok:
+                                                    {{ $product->product_quantity }}</span>
+                                                <span class="text-brown-600 font-medium">Rp
+                                                    {{ number_format($product->product_price, 0, ',', '.') }}</span>
                                             </div>
                                         </div>
                                     </a>
@@ -42,13 +46,16 @@
                     </div>
 
                     <div class="p-4">
-                        @if(isset($productShow))
+                        @if (isset($productShow))
                             <div class="flex flex-col items-center">
-                                <img src="{{ asset($productShow->product_image) }}" alt="{{ $productShow->product_name }}" class="h-48 w-48 object-cover rounded-lg mb-4">
+                                <img src="{{ asset('storage/' . $productShow->product_image) }}"
+                                    alt="{{ $productShow->product_name }}"
+                                    class="h-48 w-48 object-cover rounded-lg mb-4">
 
                                 <div class="w-full space-y-3">
                                     <div>
-                                        <h4 class="text-lg font-semibold text-gray-800">{{ $productShow->product_name }}</h4>
+                                        <h4 class="text-lg font-semibold text-gray-800">{{ $productShow->product_name }}
+                                        </h4>
                                     </div>
 
                                     <div class="flex justify-between">
@@ -58,7 +65,8 @@
 
                                     <div class="flex justify-between">
                                         <span class="text-sm text-gray-600">Harga:</span>
-                                        <span class="text-sm font-medium">Rp {{ number_format($productShow->product_price, 0, ',', '.') }}</span>
+                                        <span class="text-sm font-medium">Rp
+                                            {{ number_format($productShow->product_price, 0, ',', '.') }}</span>
                                     </div>
 
                                     <div class="pt-2">
@@ -69,7 +77,8 @@
                                     </div>
 
                                     <div class="pt-4">
-                                        <button class="w-full px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700">
+                                        <button
+                                            class="w-full px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700">
                                             Tambahkan ke Keranjang
                                         </button>
                                     </div>
