@@ -87,14 +87,14 @@ class FinanceController extends Controller
         $finance = Finance::findOrFail($id);
 
         $transactions = Transaction::where('id_finance', $finance->id)
-            ->with(['merchant', 'transactionDetail.distributionProduct'])
+            ->with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->get();
         if ($transactions->isEmpty()) {
             return redirect()->back()->with('error', 'Tidak ada transaksi untuk rekapitulasi ini.');
         } else {
             $transactionData = $transactions->map(
                 function ($transaction) {
-                    $details = $transaction->transactionDetail;
+                    $details = $transaction->TransactionDetail;
                     $totalQuantity = 0;
                     $totalCost = 0;
 
@@ -250,20 +250,20 @@ class FinanceController extends Controller
     private function calculateIncomeBalance($date)
     {
         return Transaction::whereDate('transaction_date', $date)
-            ->with('transactionDetails')
+            ->with('TransactionDetail')
             ->get()
             ->sum(function ($transaction) {
-                return $transaction->transactionDetails->sum('sub_total');
+                return $transaction->TransactionDetail->sum('sub_total');
             });
     }
 
     private function calculateTotalQuantity($date)
     {
         return Transaction::whereDate('transaction_date', $date)
-            ->with('transactionDetails')
+            ->with('TransactionDetail')
             ->get()
             ->sum(function ($transaction) {
-                return $transaction->transactionDetails->sum('quantity');
+                return $transaction->TransactionDetail->sum('quantity');
             });
     }
 
