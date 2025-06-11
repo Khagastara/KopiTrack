@@ -81,16 +81,6 @@
                                                 class="text-yellow-600 hover:text-yellow-900" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('merchants.destroy', $merchant->id) }}"
-                                                method="POST" class="inline-block"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus merchant ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900"
-                                                    title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
                                         </div>
                                     </td>
                                 </tr>

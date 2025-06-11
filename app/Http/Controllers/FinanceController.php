@@ -238,15 +238,6 @@ class FinanceController extends Controller
             ->with('success', 'Data keuangan berhasil diperbarui');
     }
 
-    public function destroy($id)
-    {
-        $finance = Finance::findOrFail($id);
-        $finance->delete();
-
-        return redirect()->route('admin.finance.index')
-            ->with('success', 'Data keuangan berhasil dihapus');
-    }
-
     private function calculateIncomeBalance($date)
     {
         return Transaction::whereDate('transaction_date', $date)
