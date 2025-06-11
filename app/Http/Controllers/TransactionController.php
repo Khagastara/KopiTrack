@@ -286,7 +286,6 @@ class TransactionController extends Controller
                 ]);
             }
 
-            // Create main transaction with finance_id
             $transaction = Transaction::create([
                 'transaction_date' => now(),
                 'id_merchant' => $user->merchant->id,
@@ -318,7 +317,6 @@ class TransactionController extends Controller
                 // Update product quantity
                 $product->decrement('product_quantity', $quantity);
 
-                // Add to total
                 $totalAmount += $subTotal;
                 $totalQuantity += $quantity;
             }
@@ -329,7 +327,6 @@ class TransactionController extends Controller
                 'income_balance' => $finance->income_balance + $totalAmount
             ]);
 
-            // Clear cart
             Session::forget('cart');
 
             DB::commit();

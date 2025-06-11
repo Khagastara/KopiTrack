@@ -106,15 +106,6 @@
                                         class="text-green-600 hover:text-green-900 mr-3">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <form class="inline" action="{{ route('admin.finance.destroy', $finance->id) }}"
-                                        method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
                         @empty
