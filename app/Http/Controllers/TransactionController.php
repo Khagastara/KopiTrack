@@ -17,12 +17,12 @@ class TransactionController extends Controller
 {
     public function index($id = null)
     {
-        $transactions = Transaction::with(['merchant', 'transactionDetail.distributionProduct'])
+        $transactions = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->orderBy('transaction_date', 'desc')
             ->paginate(7);
         if ($transactions->count() > 0) {
             $transactions->getCollection()->transform(function ($transaction) {
-                $detail = $transaction->transactionDetail->first();
+                $detail = $transaction->TransactionDetail->first();
                 return [
                     'id' => $transaction->id,
                     'transaction_date' => $transaction->transaction_date instanceof \DateTime
@@ -39,11 +39,11 @@ class TransactionController extends Controller
         $transactionIdDetail = null;
         if ($transactions->count() > 0 && $id) {
             try {
-                $transactionId = Transaction::with(['merchant', 'transactionDetail.distributionProduct'])
+                $transactionId = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
                     ->orderBy('transaction_date', 'desc')
                     ->findOrFail($id);
 
-                $detailId = $transactionId->transactionDetail->first();
+                $detailId = $transactionId->TransactionDetail->first();
 
                 $transactionIdDetail = [
                     'id' => $transactionId->id,
@@ -67,13 +67,13 @@ class TransactionController extends Controller
     {
         $merchant = Auth::user()->merchant;
 
-        $transactions = Transaction::with(['merchant', 'transactionDetail.distributionProduct'])
+        $transactions = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->where('id_merchant', $merchant->id)
             ->orderBy('transaction_date', 'desc')
             ->paginate(7);
         if ($transactions->count() > 0) {
             $transactions->getCollection()->transform(function ($transaction) {
-                $details = $transaction->transactionDetail;
+                $details = $transaction->TransactionDetail;
                 $firstDetail = $details->first();
                 $totalQuantity = 0;
                 $totalCost = 0;
@@ -106,12 +106,12 @@ class TransactionController extends Controller
         $transactionIdDetail = null;
         if ($transactions->count() > 0 && $id) {
             try {
-                $transactionId = Transaction::with(['merchant', 'transactionDetail.distributionProduct'])
+                $transactionId = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
                     ->where('id_merchant', $merchant->id)
                     ->orderBy('transaction_date', 'desc')
                     ->findOrFail($id);
 
-                $details = $transactionId->transactionDetail;
+                $details = $transactionId->TransactionDetail;
                 $firstDetail = $details->first();
 
                 $totalQuantity = 0;
