@@ -230,8 +230,6 @@ class FinanceController extends Controller
         $finance->update([
             'finance_date' => $request->finance_date,
             'expenditure_balance' => $request->expenditure_balance,
-            'income_balance' => $this->calculateIncomeBalance($request->finance_date),
-            'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
         ]);
 
         return redirect()->route('admin.finance.index')
