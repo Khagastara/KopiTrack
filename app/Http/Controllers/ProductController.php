@@ -6,6 +6,7 @@ use App\Models\DistributionProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -29,6 +30,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
         $validator = Validator::make($request->all(), [
             'product_name' => 'required|string|max:100',
             'product_image' => 'required|image|mimes:jpeg,png,jpg|max:5120',
@@ -58,7 +60,8 @@ class ProductController extends Controller
             'product_image' => $productPath,
             'product_quantity' => $request->product_quantity,
             'product_price' => $request->product_price,
-            'product_description' => $request->product_description
+            'product_description' => $request->product_description,  // Fixed missing comma here
+            'id_admin' => $user->id  // Added required id_admin field
         ]);
 
         return redirect()->route('admin.product.index')->with('success', 'Produk berhasil ditambahkan');
