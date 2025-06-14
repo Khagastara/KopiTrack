@@ -18,20 +18,37 @@ class TransactionController extends Controller
     public function index($id = null)
     {
         $transactions = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
-            ->orderBy('transaction_date', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(7);
+
         if ($transactions->count() > 0) {
             $transactions->getCollection()->transform(function ($transaction) {
-                $detail = $transaction->TransactionDetail->first();
+                $details = $transaction->TransactionDetail;
+                $firstDetail = $details->first();
+                $totalQuantity = 0;
+                $totalCost = 0;
+
+                foreach ($details as $detail) {
+                    $totalQuantity += $detail->quantity;
+                    $totalCost += $detail->sub_price;
+                }
+
                 return [
                     'id' => $transaction->id,
                     'transaction_date' => $transaction->transaction_date instanceof \DateTime
                         ? $transaction->transaction_date->format('d-m-Y')
                         : date('d-m-Y', strtotime($transaction->transaction_date)),
                     'merchant_name' => $transaction->merchant->merchant_name,
-                    'product_name' => $detail ? $detail->distributionProduct->product_name : 'N/A',
-                    'quantity' => $detail ? $detail->quantity : 0,
-                    'transaction_cost' => $detail ? $detail->sub_price : 0,
+                    'product_name' => $firstDetail ? $firstDetail->distributionProduct->product_name : 'N/A',
+                    'product_details' => $details->map(function ($detail) {
+                        return [
+                            'product_name' => $detail->distributionProduct->product_name,
+                            'quantity' => $detail->quantity,
+                            'price' => $detail->sub_price,
+                        ];
+                    }),
+                    'quantity' => $totalQuantity,
+                    'transaction_cost' => $totalCost,
                 ];
             });
         }
@@ -43,21 +60,39 @@ class TransactionController extends Controller
                     ->orderBy('transaction_date', 'desc')
                     ->findOrFail($id);
 
-                $detailId = $transactionId->TransactionDetail->first();
+                $details = $transactionId->TransactionDetail;
+                $firstDetail = $details->first();
+
+                $totalQuantity = 0;
+                $totalCost = 0;
+
+                foreach ($details as $detail) {
+                    $totalQuantity += $detail->quantity;
+                    $totalCost += $detail->sub_price;
+                }
 
                 $transactionIdDetail = [
                     'id' => $transactionId->id,
                     'transaction_date' => $transactionId->transaction_date instanceof \DateTime
                         ? $transactionId->transaction_date->format('d-m-Y')
                         : date('d-m-Y', strtotime($transactionId->transaction_date)),
-                    'merchant_name' => $transactionId->merchant->name,
-                    'product_name' => $detailId ? $detailId->distributionProduct->product_name : 'N/A',
-                    'quantity' => $detailId ? $detailId->quantity : 0,
-                    'transaction_cost' => $detailId ? $detailId->sub_price : 0,
+                    'merchant_name' => $transactionId->merchant->merchant_name, // Perbaikan: gunakan merchant_name
+                    'product_name' => $firstDetail ? $firstDetail->distributionProduct->product_name : 'N/A',
+                    'product_details' => $details->map(function ($detail) {
+                        return [
+                            'product_name' => $detail->distributionProduct->product_name,
+                            'quantity' => $detail->quantity,
+                            'price' => $detail->sub_price,
+                        ];
+                    }),
+                    'quantity' => $totalQuantity,
+                    'transaction_cost' => $totalCost,
                 ];
             } catch (\Exception $e) {
+
             }
         }
+
         $hasTransactions = $transactions->count() > 0;
 
         return view('admin.transaction.index', compact('transactions', 'transactionIdDetail', 'hasTransactions'));
@@ -69,7 +104,7 @@ class TransactionController extends Controller
 
         $transactions = Transaction::with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->where('id_merchant', $merchant->id)
-            ->orderBy('transaction_date', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(7);
         if ($transactions->count() > 0) {
             $transactions->getCollection()->transform(function ($transaction) {

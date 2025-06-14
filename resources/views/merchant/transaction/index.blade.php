@@ -1,3 +1,4 @@
+{{-- merchant.transaction.index --}}
 <x-app-layout title="Riwayat Transaksi">
     @if (!$hasTransactions)
         <div class="alert alert-info">
@@ -82,7 +83,7 @@
                             <tr>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID</th>
+                                    No</th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Tanggal</th>
@@ -101,11 +102,11 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($transactions as $transaction)
+                            @forelse($transactions as $index => $transaction)
                                 <tr
                                     class="{{ $transaction['id'] == $transactionIdDetail['id'] ? 'bg-brown-50' : '' }}">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $transaction['id'] }}
+                                        {{ $index + 1}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $transaction['transaction_date'] }}</td>

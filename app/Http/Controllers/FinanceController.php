@@ -160,13 +160,23 @@ class FinanceController extends Controller
         $existingFinance = Finance::where('finance_date', $request->finance_date)->first();
 
         if ($existingFinance) {
+            $newExpenditureBalance = $existingFinance->expenditure_balance + $request->expenditure_balance;
+
+            $existingFinance->update([
+                'expenditure_balance' => $newExpenditureBalance,
+                'income_balance' => $this->calculateIncomeBalance($request->finance_date),
+                'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
+            ]);
+
             if ($request->ajax()) {
                 return response()->json([
-                    'success' => false,
-                    'errors' => ['finance_date' => ['Data keuangan untuk tanggal ini sudah ada']]
+                    'success' => true,
+                    'message' => 'Data keuangan berhasil diperbarui'
                 ]);
             }
-            return redirect()->back()->withErrors(['finance_date' => 'Data keuangan untuk tanggal ini sudah ada'])->withInput();
+
+            return redirect()->route('admin.finance.index')
+                ->with('success', 'Data keuangan berhasil diperbarui');
         }
 
         $finance = Finance::create([

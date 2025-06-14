@@ -23,17 +23,17 @@
                     @endif
 
                     <div class="mb-4">
-                        <label for="finance_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
-                            Rekapitulasi</label>
-                        <select id="finance_date" name="finance_date" required
-                            class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brown-500 focus:border-brown-500">
-                            <option value="">Pilih Tanggal</option>
-                            @foreach ($tanggalRekapitulasi as $tanggal)
-                                <option value="{{ $tanggal->transaction_date }}">
-                                    {{ \Carbon\Carbon::parse($tanggal->transaction_date)->format('d M Y') }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label for="finance_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Rekapitulasi</label>
+                        <div class="relative">
+                            <input type="date" id="finance_date" name="finance_date"
+                                value="{{ now()->format('Y-m-d') }}"
+                                readonly
+                                class="w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed focus:ring-0 focus:border-gray-300">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                <i class="fas fa-calendar-alt text-gray-400"></i>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">Tanggal rekapitulasi otomatis disetel ke hari ini ({{ now()->format('d M Y') }})</p>
                     </div>
 
                     <div class="mb-4">

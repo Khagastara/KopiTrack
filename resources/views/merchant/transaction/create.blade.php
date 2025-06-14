@@ -41,6 +41,9 @@
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Gambar</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Produk</th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -56,6 +59,10 @@
                             <tbody class="bg-white divide-y divide-gray-200" id="productTableBody">
                                 @forelse($products as $product)
                                     <tr class="product-item" data-name="{{ strtolower($product->product_name) }}">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <img src="{{ asset('storage/' . $product->product_image) }}"
+                                                alt="{{ $product->product_name }}"
+                                                class="h-12 w-12 object-cover rounded"></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $product->product_name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp
