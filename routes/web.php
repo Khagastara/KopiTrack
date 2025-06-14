@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
@@ -18,16 +20,26 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::group(['prefix' => 'password'], function () {
+    Route::get('/forgot', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/send-otp', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp');
+    Route::get('/verify-otp', [ForgotPasswordController::class, 'showVerifyOtpForm'])->name('password.verify-otp');
+    Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.resend-otp');
+    Route::get('/reset', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset-form');
+    Route::post('/reset', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+});
+
 Route::middleware(['auth'])->group(function () {
-    // Admin Route
+    // Admin Routes
     Route::middleware([AdminMiddleware::class])->group(function () {
-        Route::get('dashboard', function () {
-            return view('admin.dashboard');
-        })->name('admin.dashboard');
+        // Dashboard - menggunakan DashboardController
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
         Route::resource('merchants', MerchantController::class);
 
         Route::get('/admin/transactions/{id}', [TransactionController::class, 'index'])->name('admin.transaction.index');
+        Route::get('/transactions', [TransactionController::class, 'adminIndex'])->name('transactions.index');
 
         Route::get('/finance', [FinanceController::class, 'index'])->name('admin.finance.index');
         Route::match(['get', 'post'], '/finance/create', [FinanceController::class, 'create'])->name('admin.finance.create');
@@ -43,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/product/{id?}', [ProductController::class, 'index'])->name('admin.product.index');
     });
 
-    // Merchant Routes - merchant middleware
+    // Merchant Routes
     Route::middleware([MerchantMiddleware::class])->group(function () {
         Route::get('/merchant/dashboard', function () {
             return view('merchant.dashboard');
