@@ -1,8 +1,8 @@
-<x-app-layout title="Tambah Merchant">
+<x-app-layout title="Tambah Pedagang">
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Tambah Merchant Baru</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Tambah Pedagang Baru</h2>
                 <a href="{{ route('merchants.index') }}" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                     <i class="fas fa-arrow-left mr-1"></i> Kembali
                 </a>
@@ -59,12 +59,12 @@
                     </div>
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-800 mb-4 pb-2 border-b">Informasi Merchant</h3>
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 pb-2 border-b">Informasi Pedagang</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="merchant_name" class="block text-sm font-medium text-gray-700 mb-1">Nama
-                                    Merchant <span class="text-red-600">*</span></label>
+                                    Pedagang <span class="text-red-600">*</span></label>
                                 <input type="text" id="merchant_name" name="merchant_name"
                                     value="{{ old('merchant_name') }}" required
                                     class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brown-500 focus:border-brown-500">
@@ -83,7 +83,7 @@
                     <div class="mt-6">
                         <button type="submit"
                             class="w-full px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700">
-                            Tambah Merchant
+                            Tambah Pedagang
                         </button>
                     </div>
                 </form>

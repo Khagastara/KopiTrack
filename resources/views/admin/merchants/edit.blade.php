@@ -2,7 +2,7 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Edit Merchant</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Edit Pedagang</h2>
                 <div class="flex space-x-2">
                     <a href="{{ route('merchants.show', $merchant->id) }}"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
@@ -68,7 +68,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-800 mb-4 pb-2 border-b">Informasi Merchant</h3>
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 pb-2 border-b">Informasi Pedagang</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>

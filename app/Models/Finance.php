@@ -20,4 +20,9 @@ class Finance extends Model
     {
         return $this->hasMany(Transaction::class, 'id_finance', 'id');
     }
+
+    public function FinanceDetail()
+    {
+        return $this->hasMany(FinanceDetail::class, 'id_finance', 'id');
+    }
 }

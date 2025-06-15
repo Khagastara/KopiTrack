@@ -47,6 +47,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/finance/{id}', [FinanceController::class, 'show'])->name('admin.finance.show');
         Route::match(['get', 'put', 'patch'], '/finance/{id}/edit', [FinanceController::class, 'edit'])->name('admin.finance.edit');
         Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('admin.finance.destroy');
+        Route::post('/admin/finance/{id}/expenditure', [FinanceController::class, 'addExpenditureDetail'])->name('admin.finance.addExpenditureDetail');
+        Route::delete('/admin/finance/expenditure/{id}', [FinanceController::class, 'removeExpenditureDetail'])
+            ->name('admin.finance.removeExpenditureDetail');
 
         Route::get('/product/create/new', [ProductController::class, 'create'])->name('admin.product.create');
         Route::post('/product/store', [ProductController::class, 'store'])->name('admin.product.store');
@@ -60,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/merchant/dashboard', function () {
             return view('merchant.dashboard');
         })->name('merchant.dashboard');
+
+        Route::get('/merchant/dashboard', [DashboardController::class, 'merchantDashboard'])->name('merchant.dashboard');
+        Route::get('/merchant/dashboard/{merchantId}', [DashboardController::class, 'merchantDashboard']);
 
         Route::get('/merchant/product/{id?}', [ProductController::class, 'merchantIndex'])->name('merchant.product.index');
 

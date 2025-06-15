@@ -32,7 +32,7 @@ class LoginController extends Controller
             if ($user->admin) {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->merchant) {
-                return redirect()->route('merchant.dashboard');
+                return redirect()->route('merchant.product.index');
             } else {
                 Auth::logout();
                 return back()->withErrors([

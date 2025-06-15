@@ -2,7 +2,7 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Detail Merchant</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Detail Pedagang</h2>
                 <div class="flex space-x-2">
                     <a href="{{ route('merchants.edit', $merchant->id) }}"
                         class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
@@ -45,27 +45,22 @@
                     </div>
 
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-800 mb-4">Informasi Merchant</h3>
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Informasi Pedagang</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4">
                             <div>
-                                <span class="text-sm font-medium text-gray-500">ID Merchant</span>
+                                <span class="text-sm font-medium text-gray-500">ID Pedagang</span>
                                 <p class="mt-1">{{ $merchant->id }}</p>
                             </div>
 
                             <div>
-                                <span class="text-sm font-medium text-gray-500">Nama Merchant</span>
+                                <span class="text-sm font-medium text-gray-500">Nama Pedagang</span>
                                 <p class="mt-1">{{ $merchant->merchant_name }}</p>
                             </div>
 
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Nomor Telepon</span>
                                 <p class="mt-1">{{ $merchant->phone_number }}</p>
-                            </div>
-
-                            <div>
-                                <span class="text-sm font-medium text-gray-500">Tanggal Bergabung</span>
-                                <p class="mt-1">{{ $merchant->created_at->format('d M Y H:i') }}</p>
                             </div>
                         </div>
                     </div>
@@ -76,7 +71,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                                <i class="fas fa-trash mr-1"></i> Hapus Merchant
+                                <i class="fas fa-trash mr-1"></i> Hapus Pedagang
                             </button>
                         </form>
                     </div>

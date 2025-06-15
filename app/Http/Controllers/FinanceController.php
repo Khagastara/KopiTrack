@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Finance;
+use App\Models\FinanceDetail;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class FinanceController extends Controller
@@ -13,7 +15,7 @@ class FinanceController extends Controller
     public function index(Request $request, $id = null)
     {
         if ($id) {
-            $finance = Finance::findOrFail($id);
+            $finance = Finance::with('FinanceDetail')->findOrFail($id);
             return view('admin.finance.show', compact('finance'));
         }
 
@@ -36,10 +38,13 @@ class FinanceController extends Controller
 
         $navigationDate = $startOfYear->copy()->addMonths(6)->format('Y-m-d');
 
-        $finances = Finance::whereBetween('finance_date', [
-            $startOfYear->format('Y-m-d'),
-            $endOfYear->format('Y-m-d')
-        ])->orderBy('finance_date', 'asc')->get();
+        $finances = Finance::with('FinanceDetail')
+            ->whereBetween('finance_date', [
+                $startOfYear->format('Y-m-d'),
+                $endOfYear->format('Y-m-d')
+            ])
+            ->orderBy('finance_date', 'asc')
+            ->get();
 
         $financeLabels = [];
         $financeIncome = [];
@@ -57,11 +62,20 @@ class FinanceController extends Controller
 
             $financeLabels[] = $currentMonth->format('M Y');
             $financeIncome[] = $monthData->sum('income_balance');
-            $financeExpenditure[] = $monthData->sum('expenditure_balance');
+
+            $monthExpenditure = 0;
+            foreach ($monthData as $finance) {
+                $monthExpenditure += $finance->FinanceDetail->sum('expenditure_cost');
+            }
+            $financeExpenditure[] = $monthExpenditure;
         }
 
         $totalIncome = $finances->sum('income_balance');
-        $totalExpenditure = $finances->sum('expenditure_balance');
+
+        $totalExpenditure = 0;
+        foreach ($finances as $finance) {
+            $totalExpenditure += $finance->FinanceDetail->sum('expenditure_cost');
+        }
 
         $tanggalRekapitulasi = Transaction::select('transaction_date')
             ->distinct()
@@ -84,11 +98,12 @@ class FinanceController extends Controller
 
     public function show($id)
     {
-        $finance = Finance::findOrFail($id);
+        $finance = Finance::with('FinanceDetail')->findOrFail($id);
 
         $transactions = Transaction::where('id_finance', $finance->id)
             ->with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->get();
+
         if ($transactions->isEmpty()) {
             return redirect()->back()->with('error', 'Tidak ada transaksi untuk rekapitulasi ini.');
         } else {
@@ -117,7 +132,9 @@ class FinanceController extends Controller
             );
         }
 
-        return view('admin.finance.show', compact('finance', 'transactionData'));
+        $totalExpenditure = $finance->FinanceDetail->sum('expenditure_cost');
+
+        return view('admin.finance.show', compact('finance', 'transactionData', 'totalExpenditure'));
     }
 
     public function create(Request $request)
@@ -138,11 +155,19 @@ class FinanceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'finance_date' => 'required|date',
-            'expenditure_balance' => 'required|numeric|min:0',
+            'expenditure_details' => 'required|array|min:1',
+            'expenditure_details.*.cost' => 'required|numeric|min:0',
+            'expenditure_details.*.description' => 'required|string|max:255',
         ], [
-            'expenditure_balance.required' => 'Saldo pengeluaran wajib diisi',
-            'expenditure_balance.numeric' => 'Saldo pengeluaran harus berupa angka',
-            'expenditure_balance.min' => 'Saldo pengeluaran tidak boleh kurang dari 0',
+            'expenditure_details.required' => 'Detail pengeluaran wajib diisi',
+            'expenditure_details.array' => 'Detail pengeluaran harus berupa array',
+            'expenditure_details.min' => 'Minimal harus ada 1 detail pengeluaran',
+            'expenditure_details.*.cost.required' => 'Biaya pengeluaran wajib diisi',
+            'expenditure_details.*.cost.numeric' => 'Biaya pengeluaran harus berupa angka',
+            'expenditure_details.*.cost.min' => 'Biaya pengeluaran tidak boleh kurang dari 0',
+            'expenditure_details.*.description.required' => 'Deskripsi pengeluaran wajib diisi',
+            'expenditure_details.*.description.string' => 'Deskripsi pengeluaran harus berupa teks',
+            'expenditure_details.*.description.max' => 'Deskripsi pengeluaran maksimal 255 karakter',
             'finance_date.required' => 'Tanggal rekapitulasi wajib diisi',
             'finance_date.date' => 'Format tanggal tidak valid',
         ]);
@@ -157,49 +182,91 @@ class FinanceController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $existingFinance = Finance::where('finance_date', $request->finance_date)->first();
+        DB::beginTransaction();
 
-        if ($existingFinance) {
-            $newExpenditureBalance = $existingFinance->expenditure_balance + $request->expenditure_balance;
+        try {
+            $existingFinance = Finance::where('finance_date', $request->finance_date)->first();
 
-            $existingFinance->update([
-                'expenditure_balance' => $newExpenditureBalance,
+            if ($existingFinance) {
+                foreach ($request->expenditure_details as $detail) {
+                    FinanceDetail::create([
+                        'id_finance' => $existingFinance->id,
+                        'expenditure_cost' => $detail['cost'],
+                        'expenditure_description' => $detail['description'],
+                    ]);
+                }
+
+                $totalExpenditure = FinanceDetail::where('id_finance', $existingFinance->id)
+                    ->sum('expenditure_cost');
+
+                $existingFinance->update([
+                    'expenditure_balance' => $totalExpenditure,
+                    'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
+                ]);
+
+                DB::commit();
+
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Data keuangan berhasil diperbarui'
+                    ]);
+                }
+
+                return redirect()->route('admin.finance.index')
+                    ->with('success', 'Data keuangan berhasil diperbarui');
+            }
+
+            $finance = Finance::create([
+                'finance_date' => $request->finance_date,
+                'expenditure_balance' => 0,
                 'income_balance' => $this->calculateIncomeBalance($request->finance_date),
                 'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
             ]);
 
+            $totalExpenditure = 0;
+            foreach ($request->expenditure_details as $detail) {
+                FinanceDetail::create([
+                    'id_finance' => $finance->id,
+                    'expenditure_cost' => $detail['cost'],
+                    'expenditure_description' => $detail['description'],
+                ]);
+                $totalExpenditure += $detail['cost'];
+            }
+
+            $finance->update(['expenditure_balance' => $totalExpenditure]);
+
+            DB::commit();
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Data keuangan berhasil diperbarui'
+                    'message' => 'Data keuangan berhasil ditambahkan'
                 ]);
             }
 
             return redirect()->route('admin.finance.index')
-                ->with('success', 'Data keuangan berhasil diperbarui');
+                ->with('success', 'Data keuangan berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ]);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
         }
-
-        $finance = Finance::create([
-            'finance_date' => $request->finance_date,
-            'expenditure_balance' => $request->expenditure_balance,
-            'income_balance' => $this->calculateIncomeBalance($request->finance_date),
-            'total_quantity' => $this->calculateTotalQuantity($request->finance_date),
-        ]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Data keuangan berhasil ditambahkan'
-            ]);
-        }
-
-        return redirect()->route('admin.finance.index')
-            ->with('success', 'Data keuangan berhasil ditambahkan');
     }
 
     public function edit(Request $request, $id)
     {
-        $finance = Finance::findOrFail($id);
+        $finance = Finance::with('FinanceDetail')->findOrFail($id);
 
         if ($request->isMethod('put') || $request->isMethod('patch')) {
             return $this->handleUpdate($request, $id);
@@ -212,11 +279,19 @@ class FinanceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'finance_date' => 'required|date',
-            'expenditure_balance' => 'required|numeric|min:0',
+            'expenditure_details' => 'required|array|min:1',
+            'expenditure_details.*.cost' => 'required|numeric|min:0',
+            'expenditure_details.*.description' => 'required|string|max:255',
         ], [
-            'expenditure_balance.required' => 'Saldo pengeluaran wajib diisi',
-            'expenditure_balance.numeric' => 'Saldo pengeluaran harus berupa angka',
-            'expenditure_balance.min' => 'Saldo pengeluaran tidak boleh kurang dari 0',
+            'expenditure_details.required' => 'Detail pengeluaran wajib diisi',
+            'expenditure_details.array' => 'Detail pengeluaran harus berupa array',
+            'expenditure_details.min' => 'Minimal harus ada 1 detail pengeluaran',
+            'expenditure_details.*.cost.required' => 'Biaya pengeluaran wajib diisi',
+            'expenditure_details.*.cost.numeric' => 'Biaya pengeluaran harus berupa angka',
+            'expenditure_details.*.cost.min' => 'Biaya pengeluaran tidak boleh kurang dari 0',
+            'expenditure_details.*.description.required' => 'Deskripsi pengeluaran wajib diisi',
+            'expenditure_details.*.description.string' => 'Deskripsi pengeluaran harus berupa teks',
+            'expenditure_details.*.description.max' => 'Deskripsi pengeluaran maksimal 255 karakter',
             'finance_date.required' => 'Tanggal rekapitulasi wajib diisi',
             'finance_date.date' => 'Format tanggal tidak valid',
         ]);
@@ -237,13 +312,133 @@ class FinanceController extends Controller
                 ->withInput();
         }
 
-        $finance->update([
-            'finance_date' => $request->finance_date,
-            'expenditure_balance' => $request->expenditure_balance,
+        DB::beginTransaction();
+
+        try {
+            FinanceDetail::where('id_finance', $finance->id)->delete();
+
+            $totalExpenditure = 0;
+            foreach ($request->expenditure_details as $detail) {
+                FinanceDetail::create([
+                    'id_finance' => $finance->id,
+                    'expenditure_cost' => $detail['cost'],
+                    'expenditure_description' => $detail['description'],
+                ]);
+                $totalExpenditure += $detail['cost'];
+            }
+
+            $finance->update([
+                'finance_date' => $request->finance_date,
+                'expenditure_balance' => $totalExpenditure,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.finance.index')
+                ->with('success', 'Data keuangan berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function addExpenditureDetail(Request $request, $financeId)
+    {
+        $validator = Validator::make($request->all(), [
+            'expenditure_cost' => 'required|numeric|min:0',
+            'expenditure_description' => 'required|string|max:255',
+        ], [
+            'expenditure_cost.required' => 'Biaya pengeluaran wajib diisi',
+            'expenditure_cost.numeric' => 'Biaya pengeluaran harus berupa angka',
+            'expenditure_cost.min' => 'Biaya pengeluaran tidak boleh kurang dari 0',
+            'expenditure_description.required' => 'Deskripsi pengeluaran wajib diisi',
+            'expenditure_description.string' => 'Deskripsi pengeluaran harus berupa teks',
+            'expenditure_description.max' => 'Deskripsi pengeluaran maksimal 255 karakter',
         ]);
 
-        return redirect()->route('admin.finance.index')
-            ->with('success', 'Data keuangan berhasil diperbarui');
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ]);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $finance = Finance::findOrFail($financeId);
+
+            FinanceDetail::create([
+                'id_finance' => $finance->id,
+                'expenditure_cost' => $request->expenditure_cost,
+                'expenditure_description' => $request->expenditure_description,
+            ]);
+
+            $totalExpenditure = FinanceDetail::where('id_finance', $finance->id)
+                ->sum('expenditure_cost');
+
+            $finance->update(['expenditure_balance' => $totalExpenditure]);
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Detail pengeluaran berhasil ditambahkan'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Detail pengeluaran berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ]);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function removeExpenditureDetail($detailId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $financeDetail = FinanceDetail::findOrFail($detailId);
+            $financeId = $financeDetail->id_finance;
+
+            $financeDetail->delete();
+
+            $finance = Finance::findOrFail($financeId);
+            $totalExpenditure = FinanceDetail::where('id_finance', $financeId)
+                ->sum('expenditure_cost');
+
+            $finance->update(['expenditure_balance' => $totalExpenditure]);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Detail pengeluaran berhasil dihapus');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     private function calculateIncomeBalance($date)
@@ -271,17 +466,23 @@ class FinanceController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-        $finances = Finance::whereBetween('finance_date', [$startDate, $endDate])
+        $finances = Finance::with('FinanceDetail')
+            ->whereBetween('finance_date', [$startDate, $endDate])
             ->orderBy('finance_date', 'asc')
             ->get();
+
+        $totalExpenditure = 0;
+        foreach ($finances as $finance) {
+            $totalExpenditure += $finance->FinanceDetail->sum('expenditure_cost');
+        }
 
         return response()->json([
             'success' => true,
             'data' => $finances,
             'summary' => [
                 'total_income' => $finances->sum('income_balance'),
-                'total_expenditure' => $finances->sum('expenditure_balance'),
-                'difference' => $finances->sum('income_balance') - $finances->sum('expenditure_balance')
+                'total_expenditure' => $totalExpenditure,
+                'difference' => $finances->sum('income_balance') - $totalExpenditure
             ]
         ]);
     }
