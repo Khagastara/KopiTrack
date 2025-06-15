@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
-            $table->decimal('sub_price', 10, 2);
+            $table->integer('sub_price');
             $table->unsignedBigInteger('id_transaction');
             $table->unsignedBigInteger('id_distribution_product');
             $table->timestamps();

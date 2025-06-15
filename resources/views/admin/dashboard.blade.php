@@ -35,7 +35,7 @@
                 <div class="ml-4">
                     <p class="text-gray-500 text-sm">Total Pendapatan</p>
                     <h3 class="font-bold text-2xl text-gray-800">
-                        Rp {{ number_format($currentMonthIncome / 1000000, 1) }}M
+                        Rp {{ number_format($currentMonthIncome) }}
                     </h3>
                     <p class="text-{{ $incomeGrowth >= 0 ? 'green' : 'red' }}-500 text-xs mt-1">
                         {{ $incomeGrowth >= 0 ? '+' : '' }}{{ $incomeGrowth }}% dari bulan lalu
@@ -192,7 +192,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                                return 'Rp ' + (value);
                             }
                         }
                     }

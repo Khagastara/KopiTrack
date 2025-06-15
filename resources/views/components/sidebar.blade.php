@@ -8,19 +8,21 @@
     <nav class="mt-3 px-2">
         <div class="space-y-1">
             <!-- Dashboard -->
-            <a href="{{ Auth::check() && Auth::user()->admin ? route('admin.dashboard') : route('merchant.dashboard') }}"
-                class="{{ request()->routeIs('*.dashboard') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
-               group flex items-center px-4 py-2 text-sm font-medium rounded-md">
-                <i class="fas fa-tachometer-alt mr-3 text-gray-500"></i>
-                Dashboard
-            </a>
+            @if (Auth::check() && Auth::user()->admin)
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ request()->routeIs('*.dashboard') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
+                    group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                    <i class="fas fa-tachometer-alt mr-3 text-gray-500"></i>
+                    Dashboard
+                </a>
+            @endif
 
             @if (Auth::check() && Auth::user()->admin)
                 <a href="{{ route('merchants.index') }}"
                     class="{{ request()->routeIs('merchants.*') ? 'bg-brown-100 text-brown-800' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}
-               group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                     <i class="fas fa-store mr-3 text-gray-500"></i>
-                    Kelola Merchant
+                    Kelola Pedagang
                 </a>
             @endif
 

@@ -1,11 +1,11 @@
-<x-app-layout title="Kelola Merchant">
+<x-app-layout title="Kelola Pedagang">
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Kelola Merchant</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Kelola Pedagang</h2>
                 <a href="{{ route('merchants.create') }}"
                     class="px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700">
-                    <i class="fas fa-plus mr-1"></i> Tambah Merchant
+                    <i class="fas fa-plus mr-1"></i> Tambah Pedagang
                 </a>
             </div>
 
@@ -32,7 +32,7 @@
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nama Merchant
+                                    Nama Pedagang
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -88,7 +88,7 @@
                                 <tr>
                                     <td colspan="6"
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                        Tidak ada data merchant
+                                        Tidak ada data pedagang yang tersedia
                                     </td>
                                 </tr>
                             @endforelse

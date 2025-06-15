@@ -50,8 +50,9 @@
                             <label for="product_image" class="block text-sm font-medium text-gray-700 mb-1">Gambar
                                 Produk</label>
                             <div class="mb-2">
-                                <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}"
-                                    class="h-20 w-20 object-cover rounded">
+                                <img src="{{ asset('storage/' . $product->product_image) }}"
+                                alt="{{ $product->product_name }}"
+                                class="h-20 w-20 object-cover rounded">
                             </div>
                             <input type="file" name="product_image" id="product_image"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500">
