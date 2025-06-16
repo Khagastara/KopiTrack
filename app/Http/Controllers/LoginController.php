@@ -45,16 +45,4 @@ class LoginController extends Controller
             'username' => 'Username atau password salah.',
         ])->withInput($request->only('username'));
     }
-
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
-        Auth::guard('admin')->logout();
-        Auth::guard('merchant')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('login');
-    }
 }

@@ -231,7 +231,6 @@
             updateRowNumbers();
             updateTotalExpenditure();
 
-            // Show no expenditure message if no rows left
             const container = document.getElementById('expenditure-container');
             if (container.children.length === 0) {
                 container.innerHTML = `
@@ -250,7 +249,6 @@
                 const numberSpan = row.querySelector('.row-number');
                 numberSpan.textContent = index + 1;
 
-                // Update input names to maintain sequential indexing
                 const inputs = row.querySelectorAll('input');
                 inputs.forEach(input => {
                     const name = input.name;
@@ -273,19 +271,16 @@
                 total += value;
             });
 
-            // Update total display
             document.getElementById('total-display').textContent = 'Rp ' + total.toLocaleString('id-ID');
             document.getElementById('total_expenditure').value = 'Rp ' + total.toLocaleString('id-ID');
             document.getElementById('summary-expenditure').textContent = 'Rp ' + total.toLocaleString('id-ID');
 
-            // Update profit/loss
             const profit = incomeBalance - total;
             const profitElement = document.getElementById('summary-profit');
             profitElement.textContent = 'Rp ' + profit.toLocaleString('id-ID');
             profitElement.className = profit >= 0 ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
         }
 
-        // Form validation
         document.getElementById('financeForm').addEventListener('submit', function(e) {
             const expenditureRows = document.querySelectorAll('.expenditure-row');
 
@@ -312,7 +307,6 @@
             }
         });
 
-        // Initialize total calculation
         document.addEventListener('DOMContentLoaded', function() {
             updateTotalExpenditure();
         });

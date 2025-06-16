@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\ProductController;
@@ -18,7 +20,7 @@ Route::get('/', function () {
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::group(['prefix' => 'password'], function () {
     Route::get('/forgot', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
@@ -37,6 +39,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
         Route::resource('merchants', MerchantController::class);
+
+        Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile.index');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('admin.profile.edit');
+        Route::put('/profile/update', [ProfileController::class, 'update'])->name('admin.profile.update');
 
         Route::get('/admin/transactions/{id}', [TransactionController::class, 'index'])->name('admin.transaction.index');
         Route::get('/transactions', [TransactionController::class, 'adminIndex'])->name('transactions.index');
@@ -66,6 +72,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/merchant/dashboard', [DashboardController::class, 'merchantDashboard'])->name('merchant.dashboard');
         Route::get('/merchant/dashboard/{merchantId}', [DashboardController::class, 'merchantDashboard']);
+
+        Route::get('/merchant/profile', [ProfileController::class, 'merchantIndex'])->name('merchant.profile.index');
+        Route::get('/merchant/profile/edit', [ProfileController::class, 'merchantEdit'])->name('merchant.profile.edit');
+        Route::put('/merchant/profile/update', [ProfileController::class, 'merchantUpdate'])->name('merchant.profile.update');
 
         Route::get('/merchant/product/{id?}', [ProductController::class, 'merchantIndex'])->name('merchant.product.index');
 

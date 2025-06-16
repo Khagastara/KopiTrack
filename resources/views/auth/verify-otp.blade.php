@@ -65,10 +65,8 @@
     </div>
 
     <script>
-        // Auto-submit when 6 digits are entered
         document.getElementById('otp').addEventListener('input', function() {
             if (this.value.length === 6) {
-                // Optional: Auto-submit after a short delay
                 setTimeout(() => {
                     this.form.submit();
                 }, 500);

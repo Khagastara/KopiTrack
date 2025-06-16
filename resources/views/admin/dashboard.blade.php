@@ -10,7 +10,6 @@
     @endif
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <!-- Total Merchant -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-blue-100 text-blue-500">
@@ -26,7 +25,6 @@
             </div>
         </div>
 
-        <!-- Total Pendapatan -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100 text-green-500">
@@ -44,7 +42,6 @@
             </div>
         </div>
 
-        <!-- Total Produk -->
         <div class="bg-white shadow rounded-lg p-4">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-500">
@@ -55,22 +52,6 @@
                     <h3 class="font-bold text-2xl text-gray-800">{{ number_format($totalProducts) }}</h3>
                     <p class="text-{{ $productsGrowth >= 0 ? 'green' : 'red' }}-500 text-xs mt-1">
                         {{ $productsGrowth >= 0 ? '+' : '' }}{{ $productsGrowth }}% dari bulan lalu
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Pengguna -->
-        <div class="bg-white shadow rounded-lg p-4">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-red-100 text-red-500">
-                    <i class="fas fa-users fa-fw fa-2x"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500 text-sm">Total Pengguna</p>
-                    <h3 class="font-bold text-2xl text-gray-800">{{ number_format($totalUsers) }}</h3>
-                    <p class="text-{{ $usersGrowth >= 0 ? 'green' : 'red' }}-500 text-xs mt-1">
-                        {{ $usersGrowth >= 0 ? '+' : '' }}{{ $usersGrowth }}% dari bulan lalu
                     </p>
                 </div>
             </div>

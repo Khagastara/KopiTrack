@@ -60,8 +60,8 @@ class ProductController extends Controller
             'product_image' => $productPath,
             'product_quantity' => $request->product_quantity,
             'product_price' => $request->product_price,
-            'product_description' => $request->product_description,  // Fixed missing comma here
-            'id_admin' => $user->id  // Added required id_admin field
+            'product_description' => $request->product_description,
+            'id_admin' => $user->id
         ]);
 
         return redirect()->route('admin.product.index')->with('success', 'Produk berhasil ditambahkan');
