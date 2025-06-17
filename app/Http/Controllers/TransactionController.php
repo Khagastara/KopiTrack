@@ -76,7 +76,7 @@ class TransactionController extends Controller
                     'transaction_date' => $transactionId->transaction_date instanceof \DateTime
                         ? $transactionId->transaction_date->format('d-m-Y')
                         : date('d-m-Y', strtotime($transactionId->transaction_date)),
-                    'merchant_name' => $transactionId->merchant->merchant_name, // Perbaikan: gunakan merchant_name
+                    'merchant_name' => $transactionId->merchant->merchant_name,
                     'product_name' => $firstDetail ? $firstDetail->distributionProduct->product_name : 'N/A',
                     'product_details' => $details->map(function ($detail) {
                         return [
@@ -191,7 +191,6 @@ class TransactionController extends Controller
         $cart = Session::get('cart', []);
         $cartTotal = 0;
 
-        // Hitung total
         foreach ($cart as $item) {
             $cartTotal += $item['price'] * $item['quantity'];
         }
@@ -324,10 +323,9 @@ class TransactionController extends Controller
             $transaction = Transaction::create([
                 'transaction_date' => now(),
                 'id_merchant' => $user->merchant->id,
-                'id_finance' => $finance->id // Tambahkan id_finance saat membuat transaksi
+                'id_finance' => $finance->id
             ]);
 
-            // Process each product in cart
             foreach ($cart as $item) {
                 $productId = $item['id'];
                 $quantity = $item['quantity'];
@@ -336,12 +334,10 @@ class TransactionController extends Controller
 
                 $product = DistributionProduct::findOrFail($productId);
 
-                // Check stock availability again to be safe
                 if ($product->product_quantity < $quantity) {
                     throw new \Exception("Stok untuk produk {$product->product_name} tidak mencukupi");
                 }
 
-                // Create transaction detail
                 TransactionDetail::create([
                     'quantity' => $quantity,
                     'sub_price' => $subTotal,
@@ -349,14 +345,12 @@ class TransactionController extends Controller
                     'id_distribution_product' => $productId
                 ]);
 
-                // Update product quantity
                 $product->decrement('product_quantity', $quantity);
 
                 $totalAmount += $subTotal;
                 $totalQuantity += $quantity;
             }
 
-            // Update finance dengan nilai total yang sudah dihitung
             $finance->update([
                 'total_quantity' => $finance->total_quantity + $totalQuantity,
                 'income_balance' => $finance->income_balance + $totalAmount
@@ -419,7 +413,6 @@ class TransactionController extends Controller
                 ]);
             }
 
-            // Buat transaction dengan id_finance
             $transaction = Transaction::create([
                 'transaction_date' => now(),
                 'id_merchant' => $user->merchant->id,

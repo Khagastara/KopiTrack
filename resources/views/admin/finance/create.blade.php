@@ -138,7 +138,6 @@
 
                 let expenditureCount = 1;
 
-                // Function to format currency
                 function formatCurrency(amount) {
                     return new Intl.NumberFormat('id-ID', {
                         style: 'currency',
@@ -148,7 +147,6 @@
                     }).format(amount);
                 }
 
-                // Function to calculate total expenditure
                 function calculateTotal() {
                     const costInputs = document.querySelectorAll('.expenditure-cost');
                     let total = 0;
@@ -161,14 +159,12 @@
                     totalExpenditureEl.textContent = formatCurrency(total);
                 }
 
-                // Function to update item numbers
                 function updateItemNumbers() {
                     const items = document.querySelectorAll('.expenditure-item');
                     items.forEach((item, index) => {
                         const title = item.querySelector('h4');
                         title.textContent = `Pengeluaran #${index + 1}`;
 
-                        // Update input names
                         const inputs = item.querySelectorAll('input');
                         inputs.forEach(input => {
                             if (input.name.includes('[description]')) {
@@ -178,7 +174,6 @@
                             }
                         });
 
-                        // Show/hide remove button
                         const removeBtn = item.querySelector('.remove-expenditure');
                         if (items.length > 1) {
                             removeBtn.classList.remove('hidden');
@@ -188,7 +183,6 @@
                     });
                 }
 
-                // Add expenditure item
                 addExpenditureBtn.addEventListener('click', function() {
                     const newItem = document.createElement('div');
                     newItem.className = 'expenditure-item bg-gray-50 p-4 rounded-lg border fade-in';
@@ -222,11 +216,9 @@
                     expenditureCount++;
                     updateItemNumbers();
 
-                    // Add event listener for the new cost input
                     const newCostInput = newItem.querySelector('.expenditure-cost');
                     newCostInput.addEventListener('input', calculateTotal);
 
-                    // Add event listener for remove button
                     const removeBtn = newItem.querySelector('.remove-expenditure');
                     removeBtn.addEventListener('click', function() {
                         newItem.classList.add('fade-out');
@@ -238,7 +230,6 @@
                     });
                 });
 
-                // Event delegation for remove buttons and cost inputs
                 expenditureContainer.addEventListener('click', function(e) {
                     if (e.target.closest('.remove-expenditure')) {
                         const item = e.target.closest('.expenditure-item');
@@ -257,16 +248,13 @@
                     }
                 });
 
-                // Form submission with loading state
                 form.addEventListener('submit', function(event) {
                     event.preventDefault();
 
-                    // Disable submit button and show loader
                     submitBtn.disabled = true;
                     submitText.textContent = 'Menyimpan...';
                     submitLoader.classList.remove('hidden');
 
-                    // Clear previous errors
                     const errorContainer = document.getElementById('errorContainer');
                     errorContainer.innerHTML = '';
 
@@ -283,7 +271,6 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Show success message briefly before redirect
                                 submitText.textContent = 'Berhasil!';
                                 submitLoader.classList.add('hidden');
 
@@ -291,12 +278,10 @@
                                     window.location.href = '{{ route('admin.finance.index') }}';
                                 }, 1000);
                             } else {
-                                // Reset button state
                                 submitBtn.disabled = false;
                                 submitText.textContent = 'Simpan Data Keuangan';
                                 submitLoader.classList.add('hidden');
 
-                                // Show errors
                                 let errorHtml = '<div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">';
                                 errorHtml += '<ul class="list-disc pl-5">';
 
@@ -317,19 +302,16 @@
                                 errorHtml += '</ul></div>';
                                 errorContainer.innerHTML = errorHtml;
 
-                                // Scroll to error
                                 errorContainer.scrollIntoView({ behavior: 'smooth' });
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
 
-                            // Reset button state
                             submitBtn.disabled = false;
                             submitText.textContent = 'Simpan Data Keuangan';
                             submitLoader.classList.add('hidden');
 
-                            // Show generic error
                             const errorContainer = document.getElementById('errorContainer');
                             errorContainer.innerHTML = `
                                 <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
@@ -339,7 +321,6 @@
                         });
                 });
 
-                // Initial calculation
                 calculateTotal();
                 updateItemNumbers();
             });

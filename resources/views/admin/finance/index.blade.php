@@ -52,7 +52,6 @@
                 </div>
             </div>
 
-            <!-- Finance Table -->
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -149,7 +148,6 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            // Chart initialization
             document.addEventListener('DOMContentLoaded', function() {
                 const ctx = document.getElementById('financeChart').getContext('2d');
                 const financeChart = new Chart(ctx, {
@@ -182,7 +180,6 @@
                     }
                 });
 
-                // Filter modal functionality
                 const filterButton = document.getElementById('filterButton');
                 const filterModal = document.getElementById('filterModal');
                 const closeFilterModal = document.getElementById('closeFilterModal');
@@ -212,7 +209,6 @@
                                 alert(
                                     `Hasil filter: Total Pendapatan: Rp${data.summary.total_income.toLocaleString()}, Total Pengeluaran: Rp${data.summary.total_expenditure.toLocaleString()}`
                                 );
-                                // You could update the UI with the filtered data here
                                 filterModal.classList.add('hidden');
                             }
                         })

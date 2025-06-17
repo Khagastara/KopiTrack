@@ -1,4 +1,3 @@
-{{-- merchant.transaction.index --}}
 <x-app-layout title="Riwayat Transaksi">
     @if (!$hasTransactions)
         <div class="alert alert-info">

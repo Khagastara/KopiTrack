@@ -23,6 +23,7 @@ class ForgotPasswordController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:accounts,email',
+        ], [
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Format email tidak valid',
             'email.exists' => 'Email tidak ditemukan'
@@ -43,11 +44,27 @@ class ForgotPasswordController extends Controller
         try {
             Mail::to($request->email)->send(new ForgotPasswordOtp($otp, $user->username ?? 'User'));
 
+            // Handle AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Kode OTP telah dikirim ke email Anda'
+                ]);
+            }
+
             return redirect()->route('password.verify-otp')
                 ->with('email', $request->email)
                 ->with('success', 'Kode OTP telah dikirim ke email Anda');
         } catch (\Exception $e) {
             Log::error('Failed to send OTP email: ' . $e->getMessage());
+
+            // Handle AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengirim email: ' . $e->getMessage()
+                ], 500);
+            }
 
             return back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
         }
@@ -77,10 +94,27 @@ class ForgotPasswordController extends Controller
             ->first();
 
         if (!$otpRecord || !Hash::check($request->otp, $otpRecord->otp)) {
+            // Handle AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kode OTP tidak valid atau sudah kadaluarsa'
+                ], 400);
+            }
+
             return back()->with('error', 'Kode OTP tidak valid atau sudah kadaluarsa');
         }
 
         $otpRecord->update(['verified' => true]);
+
+        // Handle AJAX request
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode OTP berhasil diverifikasi',
+                'redirect' => route('password.reset-form')
+            ]);
+        }
 
         return redirect()->route('password.reset-form')
             ->with('email', $request->email)
@@ -143,12 +177,26 @@ class ForgotPasswordController extends Controller
         $email = $request->email ?? session('email');
 
         if (!$email) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email tidak ditemukan'
+                ], 400);
+            }
+
             return redirect()->route('password.request');
         }
 
         $user = Account::where('email', $email)->first();
 
         if (!$user) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email tidak ditemukan'
+                ], 400);
+            }
+
             return redirect()->route('password.request')
                 ->with('error', 'Email tidak ditemukan');
         }
@@ -167,9 +215,23 @@ class ForgotPasswordController extends Controller
         try {
             Mail::to($email)->send(new ForgotPasswordOtp($otp, $user->username ?? 'User'));
 
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Kode OTP baru telah dikirim ke email Anda'
+                ]);
+            }
+
             return back()->with('success', 'Kode OTP baru telah dikirim ke email Anda');
         } catch (\Exception $e) {
             Log::error('Failed to resend OTP email: ' . $e->getMessage());
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengirim email: ' . $e->getMessage()
+                ], 500);
+            }
 
             return back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
         }

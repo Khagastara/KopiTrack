@@ -37,7 +37,7 @@
                                 <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username
                                     <span class="text-red-600">*</span></label>
                                 <input type="text" id="username" name="username"
-                                    value="{{ old('username', $merchant->account->username) }}" required
+                                    value="{{ old('username', $merchant->account->username) }}" disabled
                                     class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brown-500 focus:border-brown-500">
                             </div>
 
@@ -45,7 +45,7 @@
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email <span
                                         class="text-red-600">*</span></label>
                                 <input type="email" id="email" name="email"
-                                    value="{{ old('email', $merchant->account->email) }}" required
+                                    value="{{ old('email', $merchant->account->email) }}" disabled
                                     class="w-full border-gray-300 rounded-md shadow-sm focus:ring-brown-500 focus:border-brown-500">
                             </div>
 

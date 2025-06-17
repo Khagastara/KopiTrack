@@ -123,7 +123,7 @@ class FinanceController extends Controller
                         'transaction_date' => $transaction->transaction_date instanceof \DateTime
                             ? $transaction->transaction_date->format('d-m-Y')
                             : date('d-m-Y', strtotime($transaction->transaction_date)),
-                        'merchant_name' => $transaction->merchant->name,
+                        'merchant_name' => $transaction->merchant->merchant_name,
                         'product_count' => $details->count(),
                         'quantity' => $totalQuantity,
                         'transaction_cost' => $totalCost,

@@ -46,12 +46,7 @@
                         @enderror
                     </div>
 
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex items-center">
-                            <input id="remember" name="remember" type="checkbox"
-                                class="h-4 w-4 text-brown-600 focus:ring-brown-500 border-gray-300 rounded">
-                            <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
-                        </div>
+                    <div class="flex justify-end mb-6">
                         <a href="{{ route('password.request') }}" class="text-sm text-brown-600 hover:text-brown-800">Lupa password?</a>
                     </div>
 

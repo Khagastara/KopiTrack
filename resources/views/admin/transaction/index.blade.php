@@ -1,4 +1,3 @@
-{{-- admin.transaction.index --}}
 <x-app-layout title="Manajemen Transaksi">
     @if (!$hasTransactions)
         <div class="alert alert-info">
