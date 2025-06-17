@@ -25,8 +25,7 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 Route::group(['prefix' => 'password'], function () {
     Route::get('/forgot', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
     Route::post('/send-otp', [ForgotPasswordController::class, 'sendOtp'])->name('password.send-otp');
-    Route::get('/verify-otp', [ForgotPasswordController::class, 'showVerifyOtpForm'])->name('password.verify-otp');
-    Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOtp']);
+    Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.verify-otp');
     Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.resend-otp');
     Route::get('/reset', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset-form');
     Route::post('/reset', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
