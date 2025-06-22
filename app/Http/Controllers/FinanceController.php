@@ -12,13 +12,8 @@ use Carbon\Carbon;
 
 class FinanceController extends Controller
 {
-    public function index(Request $request, $id = null)
+    public function index(Request $request)
     {
-        if ($id) {
-            $finance = Finance::with('FinanceDetail')->findOrFail($id);
-            return view('admin.finance.show', compact('finance'));
-        }
-
         $currentDate = $request->get('current_date', now()->format('Y-m-d'));
         $date = Carbon::parse($currentDate);
 
@@ -104,9 +99,9 @@ class FinanceController extends Controller
             ->with(['merchant', 'TransactionDetail.DistributionProduct'])
             ->get();
 
-        if ($transactions->isEmpty()) {
-            return redirect()->back()->with('error', 'Tidak ada transaksi untuk rekapitulasi ini.');
-        } else {
+        $transactionData = [];
+
+        if ($transactions->isNotEmpty()) {
             $transactionData = $transactions->map(
                 function ($transaction) {
                     $details = $transaction->TransactionDetail;

@@ -4,10 +4,6 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-900">Edit Pedagang</h2>
                 <div class="flex space-x-2">
-                    <a href="{{ route('merchants.show', $merchant->id) }}"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        <i class="fas fa-eye mr-1"></i> Detail
-                    </a>
                     <a href="{{ route('merchants.index') }}" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                         <i class="fas fa-arrow-left mr-1"></i> Kembali
                     </a>

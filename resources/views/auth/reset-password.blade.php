@@ -45,7 +45,7 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full bg-brown-600 hover:bg-brown-700 text-black font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
+                        class="w-full bg-brown-600 hover:bg-brown-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
                         Reset Password
                     </button>
                 </form>
