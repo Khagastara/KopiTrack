@@ -36,7 +36,7 @@
 
             <div class="bg-white p-4 rounded-lg shadow-md mb-6">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">Grafik Keuangan</h3>
-                <canvas id="financeChart" height="300"></canvas>
+                <canvas id="financeChart" height="12tes"></canvas>
             </div>
 
             <div class="flex justify-between mb-4">
