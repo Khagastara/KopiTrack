@@ -43,7 +43,7 @@ class FinanceController extends Controller
                 $startOfYear->format('Y-m-d'),
                 $endOfYear->format('Y-m-d')
             ])
-            ->orderBy('finance_date', 'asc')
+            ->orderBy('finance_date', 'desc')
             ->get();
 
         $financeLabels = [];
