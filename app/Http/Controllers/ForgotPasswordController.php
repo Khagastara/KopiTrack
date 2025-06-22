@@ -169,7 +169,7 @@ class ForgotPasswordController extends Controller
         $otpRecord->delete();
 
         return redirect()->route('login')
-            ->with('success', 'Password berhasil diubah. Silakan login dengan password baru.');
+            ->with('success', 'Password Berhasil Diubah. Silakan Login Dengan Password Baru.');
     }
 
     public function resendOtp(Request $request)

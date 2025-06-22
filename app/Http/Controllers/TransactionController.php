@@ -24,7 +24,7 @@ class TransactionController extends Controller
         if ($transactions->count() > 0) {
             $transactions->getCollection()->transform(function ($transaction) {
                 $details = $transaction->TransactionDetail;
-                $firstDetail = $details->first();
+                $firstDetail = $details->last();
                 $totalQuantity = 0;
                 $totalCost = 0;
 
@@ -61,7 +61,7 @@ class TransactionController extends Controller
                     ->findOrFail($id);
 
                 $details = $transactionId->TransactionDetail;
-                $firstDetail = $details->first();
+                $firstDetail = $details->last();
 
                 $totalQuantity = 0;
                 $totalCost = 0;

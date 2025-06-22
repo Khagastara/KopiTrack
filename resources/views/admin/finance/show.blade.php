@@ -51,7 +51,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabs Navigation -->
                     <div class="border-b border-gray-200">
                         <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                             <button onclick="switchTab('pendapatan')" id="tab-pendapatan"
@@ -67,9 +66,7 @@
                         </nav>
                     </div>
 
-                    <!-- Tab Contents -->
                     <div class="mt-6">
-                        <!-- Pendapatan Tab -->
                         <div id="content-pendapatan" class="tab-content">
                             @if (isset($transactionData) && count($transactionData) > 0)
                                 <div class="mb-4">
@@ -83,7 +80,7 @@
                                             <tr>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    ID</th>
+                                                    No</th>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Tanggal</th>
@@ -102,10 +99,10 @@
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
-                                            @foreach ($transactionData as $transaction)
+                                            @foreach ($transactionData as $index => $transaction)
                                                 <tr class="hover:bg-gray-50">
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                        {{ $transaction['id'] }}</td>
+                                                        {{ $index + 1 }}</td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                         {{ $transaction['transaction_date'] }}</td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -141,7 +138,6 @@
                             @endif
                         </div>
 
-                        <!-- Pengeluaran Tab -->
                         <div id="content-pengeluaran" class="tab-content hidden">
                             @if ($finance->FinanceDetail->count() > 0)
                                 <div class="mb-4">
@@ -158,13 +154,13 @@
                                                     No</th>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Tanggal Dibuat</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Deskripsi</th>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Biaya</th>
-                                                <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    Tanggal Dibuat</th>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Aksi</th>
@@ -175,13 +171,13 @@
                                                 <tr class="hover:bg-gray-50">
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                         {{ $index + 1 }}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                            {{ $detail->created_at ? $detail->created_at->format('d M Y H:i') : '-' }}
+                                                        </td>
                                                     <td class="px-6 py-4 text-sm text-gray-900">
                                                         {{ $detail->expenditure_description }}</td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
                                                         Rp {{ number_format($detail->expenditure_cost, 0, ',', '.') }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                        {{ $detail->created_at ? $detail->created_at->format('d M Y H:i') : '-' }}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                                         <form action="{{ route('admin.finance.removeExpenditureDetail', $detail->id) }}"
